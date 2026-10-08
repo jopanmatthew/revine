@@ -1,0 +1,7 @@
+# Design review screenshots: large and regenerable
+.impeccable/review/
+
+# Foundry secrets (PRD §12.4); never commit
+contracts/.env
+
+.DS_Store

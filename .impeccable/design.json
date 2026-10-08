@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-08T00:00:00Z",
+  "title": "Design System: revine.",
+  "extensions": {
+    "source": "Derived from the shipped build in apps/web (tokens in apps/web/src/app/globals.css). Brand values owned by PRD.md §10.1; copy by §10.2.",
+    "colorMeta": {
+      "brand-900": { "role": "primary", "displayName": "Deep Forest", "canonical": "oklch(22.1% 0.028 175.3)", "tonalRamp": ["oklch(15% 0.028 175.3)", "oklch(25% 0.028 175.3)", "oklch(37% 0.028 175.3)", "oklch(49% 0.028 175.3)", "oklch(61% 0.028 175.3)", "oklch(73% 0.028 175.3)", "oklch(85% 0.028 175.3)", "oklch(95% 0.028 175.3)"] },
+      "brand-700": { "role": "primary", "displayName": "Ledger Green", "canonical": "oklch(44.8% 0.083 167.2)", "tonalRamp": ["oklch(15% 0.083 167.2)", "oklch(25% 0.083 167.2)", "oklch(37% 0.083 167.2)", "oklch(49% 0.083 167.2)", "oklch(61% 0.083 167.2)", "oklch(73% 0.083 167.2)", "oklch(85% 0.083 167.2)", "oklch(95% 0.04 167.2)"] },
+      "mint": { "role": "secondary", "displayName": "Fresh Mint", "canonical": "oklch(75.3% 0.142 166.5)", "note": "Awaiting designer confirmation (PRD §21). Fill only on light backgrounds.", "tonalRamp": ["oklch(15% 0.06 166.5)", "oklch(25% 0.09 166.5)", "oklch(37% 0.11 166.5)", "oklch(49% 0.13 166.5)", "oklch(61% 0.142 166.5)", "oklch(73% 0.142 166.5)", "oklch(85% 0.1 166.5)", "oklch(95% 0.04 166.5)"] },
+      "bg": { "role": "neutral", "displayName": "Morning Paper", "canonical": "oklch(98.2% 0.006 128.5)", "tonalRamp": ["oklch(15% 0.006 128.5)", "oklch(25% 0.006 128.5)", "oklch(37% 0.006 128.5)", "oklch(49% 0.006 128.5)", "oklch(61% 0.006 128.5)", "oklch(73% 0.006 128.5)", "oklch(85% 0.006 128.5)", "oklch(95% 0.006 128.5)"] },
+      "card": { "role": "neutral", "displayName": "Card White", "canonical": "oklch(1 0 0)", "tonalRamp": ["oklch(15% 0 0)", "oklch(25% 0 0)", "oklch(37% 0 0)", "oklch(49% 0 0)", "oklch(61% 0 0)", "oklch(73% 0 0)", "oklch(85% 0 0)", "oklch(95% 0 0)"] },
+      "ink": { "role": "neutral", "displayName": "Forest Ink", "canonical": "oklch(27.3% 0.017 170.8)", "tonalRamp": ["oklch(15% 0.017 170.8)", "oklch(25% 0.017 170.8)", "oklch(37% 0.017 170.8)", "oklch(49% 0.017 170.8)", "oklch(61% 0.017 170.8)", "oklch(73% 0.017 170.8)", "oklch(85% 0.017 170.8)", "oklch(95% 0.017 170.8)"] },
+      "ink-muted": { "role": "neutral", "displayName": "Slate Moss", "canonical": "oklch(53.7% 0.007 153.7)", "tonalRamp": ["oklch(15% 0.007 153.7)", "oklch(25% 0.007 153.7)", "oklch(37% 0.007 153.7)", "oklch(49% 0.007 153.7)", "oklch(61% 0.007 153.7)", "oklch(73% 0.007 153.7)", "oklch(85% 0.007 153.7)", "oklch(95% 0.007 153.7)"] },
+      "muted-surface": { "role": "neutral", "displayName": "Quiet Fill", "canonical": "oklch(0.97 0 0)", "tonalRamp": ["oklch(15% 0 0)", "oklch(25% 0 0)", "oklch(37% 0 0)", "oklch(49% 0 0)", "oklch(61% 0 0)", "oklch(73% 0 0)", "oklch(85% 0 0)", "oklch(95% 0 0)"] },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "oklch(0.922 0 0)", "note": "shadcn border and input stroke. Card edges use ink at 10% as a ring; in-card dividers ink at 7%.", "tonalRamp": ["oklch(15% 0 0)", "oklch(25% 0 0)", "oklch(37% 0 0)", "oklch(49% 0 0)", "oklch(61% 0 0)", "oklch(73% 0 0)", "oklch(85% 0 0)", "oklch(95% 0 0)"] },
+      "danger": { "role": "status", "displayName": "Signal Red", "canonical": "oklch(57.7% 0.245 27.325)", "note": "Tailwind red-600 stand-in until the designer adds one.", "tonalRamp": ["oklch(15% 0.06 27.3)", "oklch(25% 0.1 27.3)", "oklch(37% 0.15 27.3)", "oklch(49% 0.2 27.3)", "oklch(61% 0.22 27.3)", "oklch(73% 0.15 27.3)", "oklch(85% 0.08 27.3)", "oklch(95% 0.03 27.3)"] },
+      "warning": { "role": "status", "displayName": "Amber Wash", "canonical": "oklch(96.2% 0.059 95.617)", "note": "Tailwind amber-100 stand-in.", "tonalRamp": ["oklch(15% 0.04 95.6)", "oklch(25% 0.06 95.6)", "oklch(37% 0.09 95.6)", "oklch(49% 0.11 95.6)", "oklch(61% 0.13 95.6)", "oklch(73% 0.14 95.6)", "oklch(85% 0.11 95.6)", "oklch(95% 0.059 95.6)"] },
+      "warning-foreground": { "role": "status", "displayName": "Amber Ink", "canonical": "oklch(47.3% 0.137 46.201)", "note": "Tailwind amber-800 stand-in.", "tonalRamp": ["oklch(15% 0.05 46.2)", "oklch(25% 0.08 46.2)", "oklch(37% 0.11 46.2)", "oklch(47.3% 0.137 46.2)", "oklch(61% 0.14 46.2)", "oklch(73% 0.11 46.2)", "oklch(85% 0.07 46.2)", "oklch(95% 0.03 46.2)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Landing H1 only. 2.6rem phones, 3.75rem from 640px, 4.5rem from 1280px." },
+      "headline": { "displayName": "Headline", "purpose": "App page heading (1.75rem to 2.25rem) and landing section titles (1.875rem to 2.25rem)." },
+      "title": { "displayName": "Title", "purpose": "Sheet titles, card and step headings (1.125 to 1.25rem)." },
+      "amount": { "displayName": "Amount", "purpose": "Every Rupiah amount: bold, tabular, no wrap, right-aligned in rows. 1rem to 1.5rem; 1.75rem in the paid toast; one step smaller from Rp1 miliar." },
+      "body": { "displayName": "Body", "purpose": "Reading text; summaries in ink-muted; inputs at 16px on phones." },
+      "label": { "displayName": "Label", "purpose": "Buttons, row titles, field and stat labels (0.75 to 0.875rem), badges at 0.75rem." },
+      "term": { "displayName": "Term", "purpose": "The money bridge's term label, brand-700 or amber when overdue." }
+    },
+    "shadows": [
+      { "name": "seat", "value": "0 1px 2px rgb(11 31 26 / 0.08)", "purpose": "Active segment in a segmented control." },
+      { "name": "thumb", "value": "0 1px 3px rgb(11 31 26 / 0.2)", "purpose": "Slider handle." },
+      { "name": "lift-hover", "value": "0 8px 28px -14px rgb(11 31 26 / 0.28)", "purpose": "Marketplace card on hover, 200ms." },
+      { "name": "float", "value": "0 18px 40px -20px rgb(11 31 26 / 0.45)", "purpose": "Standard toasts." },
+      { "name": "hero-card", "value": "0 30px 60px -30px rgb(11 31 26 / 0.45)", "purpose": "Landing example card over the hero." },
+      { "name": "dark-slab", "value": "0 18px 40px -24px rgb(11 31 26 / 0.7)", "purpose": "Credit credential on brand-900." },
+      { "name": "paid-toast", "value": "0 24px 48px -20px rgb(11 31 26 / 0.75)", "purpose": "The paid toast on brand-900." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "The single UI curve (--ease-out), 150 to 300ms." },
+      { "name": "press", "value": "transform: scale(0.97) 150ms var(--ease-out)", "purpose": "Button active state; skipped on menu triggers." },
+      { "name": "settle", "value": "revine-settle 1600ms var(--ease-out)", "purpose": "[data-fresh] rows whose status just changed: mint wash at 24% fading to transparent. Colour only." },
+      { "name": "line-draw", "value": "revine-draw 900ms var(--ease-out) 400ms both; chevron revine-appear 250ms ease-out 1200ms both", "purpose": "Landing example money bridge only, motion-safe." },
+      { "name": "hero-planes", "value": "fade-in + slide-in-from-right 700ms var(--ease-out), second plane delayed 100ms", "purpose": "Landing hero planes on load, motion-safe." },
+      { "name": "finale", "value": "fade-in + zoom-in-75 300ms var(--ease-out); reduced motion keeps the fade", "purpose": "Stepper's final Done check and the create-invoice success mark." },
+      { "name": "hover-lift", "value": "box-shadow 200ms", "purpose": "Marketplace card hover." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px", "purpose": "Main seam: side sheet, inline primary action, stat strip columns, controls tighten from 44px." },
+      { "name": "md", "value": "768px", "purpose": "Role switcher joins the header; inputs drop to 14px." },
+      { "name": "lg", "value": "1024px", "purpose": "Landing two-column hero." },
+      { "name": "xl", "value": "1280px", "purpose": "Display size step." },
+      { "name": "bridge-stack", "value": "@container < 19.5rem (27rem for Rp1 miliar+, 20rem / 30rem at large size)", "purpose": "Money bridge turns vertical." }
+    ],
+    "browserSurfaces": {
+      "selection": "background color-mix(in oklab, var(--mint) 40%, white); color var(--brand-900)",
+      "caret": "var(--brand-700) on input and textarea",
+      "accentColor": "var(--brand-700)",
+      "scrollbar": "color-mix(in oklab, var(--ink-muted) 45%, transparent) on transparent",
+      "tapHighlight": "transparent; touch-action manipulation on links and buttons",
+      "themeColor": "#0b1f1a, viewport-fit cover"
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The screen's main action. 44px on phones, brand-700 fill, deepens to brand-900, presses to 0.97.",
+      "html": "<button class=\"ds-btn-primary\">Finance invoice</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 16px; border: 1px solid transparent; border-radius: 10px; background: var(--brand-700, #16634b); color: #fff; font-family: Satoshi, ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-primary:hover { background: var(--brand-900, #0b1f1a); } .ds-btn-primary:focus-visible { outline: none; border-color: #16634b; box-shadow: 0 0 0 3px rgb(22 99 75 / 0.5); } .ds-btn-primary:active { transform: scale(0.97); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary actions such as Close, Unlist.",
+      "html": "<button class=\"ds-btn-outline\">Close</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 16px; border: 1px solid oklch(0.922 0 0); border-radius: 10px; background: #f8faf6; color: #1f2a26; font-family: Satoshi, ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-outline:hover { background: oklch(0.97 0 0); } .ds-btn-outline:focus-visible { outline: none; border-color: #16634b; box-shadow: 0 0 0 3px rgb(22 99 75 / 0.5); } .ds-btn-outline:active { transform: scale(0.97); }"
+    },
+    {
+      "name": "Landing CTA",
+      "kind": "button",
+      "refersTo": "button-hero",
+      "description": "Launch app on the brand-900 hero only: mint fill, brand-900 text, white on hover.",
+      "html": "<div class=\"ds-hero-wrap\"><a class=\"ds-btn-hero\" href=\"#\">Launch app<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></a></div>",
+      "css": ".ds-hero-wrap { background: #0b1f1a; padding: 24px; } .ds-btn-hero { display: inline-flex; align-items: center; gap: 6px; height: 48px; padding: 0 24px; border-radius: 10px; background: #35cb9b; color: #0b1f1a; font-family: Satoshi, ui-sans-serif, system-ui, sans-serif; font-size: 16px; font-weight: 500; text-decoration: none; transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 150ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-hero:hover { background: #fff; } .ds-btn-hero:focus-visible { outline: none; box-shadow: 0 0 0 3px rgb(22 99 75 / 0.5); } .ds-btn-hero:active { transform: scale(0.97); }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "White field on forms, 44px and 16px text on phones, brand-700 focus and caret.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Invoice amount</span><input class=\"ds-input\" placeholder=\"Rp10.000.000\" /></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 8px; font-family: Satoshi, ui-sans-serif, system-ui, sans-serif; } .ds-field-label { font-size: 14px; font-weight: 500; color: #1f2a26; } .ds-input { height: 44px; padding: 4px 10px; border: 1px solid oklch(0.922 0 0); border-radius: 10px; background: #fff; color: #1f2a26; font: inherit; font-size: 16px; caret-color: #16634b; transition: border-color 150ms, box-shadow 150ms; } .ds-input::placeholder { color: #6b6f6c; } .ds-input:focus-visible { outline: none; border-color: #16634b; box-shadow: 0 0 0 3px rgb(22 99 75 / 0.5); }"
+    },
+    {
+      "name": "Role Switcher",
+      "kind": "nav",
+      "refersTo": "segmented-control",
+      "description": "Segmented control used for role navigation and sort orders.",
+      "html": "<nav class=\"ds-seg\" aria-label=\"Role\"><a class=\"ds-seg-item\" href=\"#\">Seller</a><a class=\"ds-seg-item is-active\" aria-current=\"page\" href=\"#\">Buyer</a><a class=\"ds-seg-item\" href=\"#\">Financier</a></nav>",
+      "css": ".ds-seg { display: inline-flex; padding: 4px; border-radius: 10px; background: oklch(0.97 0 0); font-family: Satoshi, ui-sans-serif, system-ui, sans-serif; } .ds-seg-item { display: flex; align-items: center; justify-content: center; height: 40px; padding: 0 16px; border-radius: 8px; color: #6b6f6c; font-size: 14px; font-weight: 500; text-decoration: none; transition: color 150ms, background-color 150ms, box-shadow 150ms; } .ds-seg-item:hover { color: #1f2a26; } .ds-seg-item:focus-visible { outline: none; box-shadow: 0 0 0 3px rgb(22 99 75 / 0.5); } .ds-seg-item.is-active { background: #fff; color: #1f2a26; box-shadow: 0 1px 2px rgb(11 31 26 / 0.08); }"
+    },
+    {
+      "name": "Status Badges",
+      "kind": "chip",
+      "refersTo": "badge-listed",
+      "description": "PRD §10.1 status set plus the amber warning tag. Text plus colour, always.",
+      "html": "<div class=\"ds-badges\"><span class=\"ds-badge ds-b-created\">Created</span><span class=\"ds-badge ds-b-verified\">Verified</span><span class=\"ds-badge ds-b-rejected\">Rejected</span><span class=\"ds-badge ds-b-listed\">Listed</span><span class=\"ds-badge ds-b-financed\">Financed</span><span class=\"ds-badge ds-b-paid\">Paid</span><span class=\"ds-badge ds-b-warn\">Overdue</span></div>",
+      "css": ".ds-badges { display: flex; flex-wrap: wrap; gap: 6px; font-family: Satoshi, ui-sans-serif, system-ui, sans-serif; } .ds-badge { display: inline-flex; align-items: center; height: 20px; padding: 2px 8px; border: 1px solid transparent; border-radius: 9999px; font-size: 12px; font-weight: 500; white-space: nowrap; } .ds-b-created { border-color: #6b6f6c; color: #6b6f6c; } .ds-b-verified { border-color: #16634b; color: #16634b; } .ds-b-rejected { background: oklch(57.7% 0.245 27.325); color: #fff; } .ds-b-listed { background: #35cb9b; color: #0b1f1a; } .ds-b-financed { background: #16634b; color: #fff; } .ds-b-paid { background: #0b1f1a; color: #fff; } .ds-b-warn { background: oklch(96.2% 0.059 95.617); color: oklch(47.3% 0.137 46.201); }"
+    },
+    {
+      "name": "List Card with Invoice Row",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "White card, hairline ring, divided rows: who on the left, bold tabular amount on the right. Fresh rows settle in with a mint wash.",
+      "html": "<ul class=\"ds-list\"><li class=\"ds-row\"><div><div class=\"ds-row-title\">RM Selera Kita</div><div class=\"ds-row-meta\">Invoice #12 · due 7 Nov 2026</div></div><div class=\"ds-row-amount\">Rp10.000.000</div></li><li class=\"ds-row ds-fresh\"><div><div class=\"ds-row-title\">Warung Pak Budi</div><div class=\"ds-row-meta\">Invoice #14 · due 21 Nov 2026</div></div><div class=\"ds-row-amount\">Rp4.250.000</div></li></ul>",
+      "css": ".ds-list { list-style: none; margin: 0; padding: 0; overflow: hidden; border-radius: 14px; background: #fff; box-shadow: 0 0 0 1px rgb(31 42 38 / 0.1); font-family: Satoshi, ui-sans-serif, system-ui, sans-serif; } .ds-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px; } .ds-row + .ds-row { border-top: 1px solid rgb(31 42 38 / 0.07); } .ds-row-title { font-weight: 500; color: #1f2a26; } .ds-row-meta { margin-top: 4px; font-size: 12px; color: #6b6f6c; } .ds-row-amount { font-size: 18px; font-weight: 700; color: #1f2a26; font-variant-numeric: tabular-nums; white-space: nowrap; } .ds-fresh { animation: ds-settle 1600ms cubic-bezier(0.23, 1, 0.32, 1); } @keyframes ds-settle { from { background-color: color-mix(in oklab, #35cb9b 24%, transparent); } to { background-color: transparent; } }"
+    },
+    {
+      "name": "Money Bridge",
+      "kind": "custom",
+      "refersTo": "amount",
+      "description": "The signature: pay today, term line, get on the due date. Stacks vertically in narrow containers.",
+      "html": "<div class=\"ds-bridge\"><span class=\"ds-bl\">You pay</span><span class=\"ds-bterm\">in 30 days</span><span class=\"ds-bl ds-r\">You get</span><span class=\"ds-bamt\">Rp9.700.000</span><span class=\"ds-bline\"><span class=\"ds-bdot\"></span><span class=\"ds-brule\"></span><svg width=\"6\" height=\"10\" viewBox=\"0 0 6 10\"><path d=\"M1 1l4 4-4 4\" fill=\"none\" stroke=\"#16634b\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></span><span class=\"ds-bamt ds-r\">Rp10.000.000</span><span class=\"ds-bn\">today</span><span></span><span class=\"ds-bn ds-r\">on 7 Nov 2026</span></div>",
+      "css": ".ds-bridge { display: grid; grid-template-columns: auto minmax(2.5rem, 1fr) auto; align-items: center; column-gap: 12px; row-gap: 2px; padding: 20px; background: #fff; border-radius: 14px; box-shadow: 0 0 0 1px rgb(31 42 38 / 0.1); font-family: Satoshi, ui-sans-serif, system-ui, sans-serif; } .ds-r { text-align: right; } .ds-bl { font-size: 12px; font-weight: 500; color: #6b6f6c; } .ds-bn { font-size: 12px; color: #6b6f6c; } .ds-bterm { text-align: center; font-size: 11px; font-weight: 500; color: #16634b; white-space: nowrap; } .ds-bamt { font-size: 20px; font-weight: 700; letter-spacing: -0.025em; color: #1f2a26; font-variant-numeric: tabular-nums; white-space: nowrap; } .ds-bline { display: flex; align-items: center; } .ds-bdot { width: 6px; height: 6px; border-radius: 9999px; background: #16634b; flex-shrink: 0; } .ds-brule { height: 1px; flex: 1; background: rgb(22 99 75 / 0.35); transform-origin: left; } @media (prefers-reduced-motion: no-preference) { .ds-brule { animation: ds-draw 900ms cubic-bezier(0.23, 1, 0.32, 1) 400ms both; } } @keyframes ds-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }"
+    },
+    {
+      "name": "Paid Toast",
+      "kind": "custom",
+      "refersTo": "paid-toast",
+      "description": "The one celebration: brand-900 slab carrying the paid amount at full size.",
+      "html": "<div class=\"ds-paid\" role=\"status\"><p class=\"ds-paid-k\">You got paid<span class=\"ds-paid-amt\">Rp9.700.000 🎉</span></p><p class=\"ds-paid-d\">Modal Maju financed invoice #12.</p><button class=\"ds-paid-x\" aria-label=\"Dismiss\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg></button></div>",
+      "css": ".ds-paid { position: relative; width: min(24rem, calc(100vw - 2rem)); padding: 16px 20px; border-radius: 18px; background: #0b1f1a; color: #fff; box-shadow: 0 24px 48px -20px rgb(11 31 26 / 0.75), 0 0 0 1px rgb(255 255 255 / 0.1); font-family: Satoshi, ui-sans-serif, system-ui, sans-serif; } .ds-paid-k { margin: 0; display: flex; flex-direction: column; font-size: 14px; font-weight: 500; color: rgb(255 255 255 / 0.8); } .ds-paid-amt { font-size: 28px; line-height: 1.25; font-weight: 700; letter-spacing: -0.025em; color: #fff; font-variant-numeric: tabular-nums; } .ds-paid-d { margin: 4px 0 0; font-size: 14px; color: rgb(255 255 255 / 0.7); } .ds-paid-x { position: absolute; top: 8px; right: 8px; padding: 4px; border: 0; border-radius: 8px; background: transparent; color: rgb(255 255 255 / 0.5); cursor: pointer; transition: color 150ms; } .ds-paid-x:hover { color: #fff; } .ds-paid-x:focus-visible { outline: none; box-shadow: 0 0 0 3px rgb(53 203 155 / 0.5); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Money Across Time",
+    "overview": "Every invoice is drawn as a short story about money: what you pay or receive today, what arrives on a date, and the gap between them. The visual system exists to make those two amounts and that gap the loudest thing on any surface. Everything else (who, which invoice, status, chain details) is quieter and sits around it.\n\nThe world is calm, premium fintech in two greens. App screens are a pale green-white ground with white cards edged by a hairline ring, set in Satoshi at three weights, with amounts in bold tabular figures. The landing hero, the footer and a few moments of weight (the Paid badge, the paid toast, the credit credential) sit on the deep brand green. Mint is the accent, and it only ever appears as a fill or on dark. Density is deliberately low: the product is demoed live in three windows side by side, so amounts are large and rows are roomy.\n\nThe build is phone-first. Primary actions sit under the thumb, sheets rise from the bottom, every target is 44px on phones, and desktop is the same column given more room rather than a different layout.",
+    "keyCharacteristics": [
+      "The money bridge (pay amount, term line, receive amount) is the one signature and recurs wherever money moves.",
+      "White cards on #F8FAF6 with a 1px ink-at-10% ring; shadows only for things that float.",
+      "Satoshi 400 / 500 / 700 only; amounts always bold and tabular.",
+      "Two greens with clear jobs: brand-700 acts, brand-900 weighs; mint is fill only.",
+      "Status is always text plus colour, using the PRD §10.1 badge set.",
+      "One quiet motion vocabulary on a single strong ease-out curve."
+    ],
+    "rules": [
+      { "name": "The Mint Is Fill Rule", "body": "Mint never sets text on a light background (about 2:1). It is a fill (Listed badge, hero CTA, planes, highlights) or it is text and icons on brand-900. Green text on light is brand-700.", "section": "colors" },
+      { "name": "The Two Greens Rule", "body": "brand-700 is for things you can act on or read as green; brand-900 is for weight and arrival (hover, Paid, the paid toast, dark panels). Do not swap them.", "section": "colors" },
+      { "name": "The Tabular Money Rule", "body": "Every Rupiah amount renders through the amount component with tabular figures and no wrapping; amounts in rows and tables are right-aligned.", "section": "typography" },
+      { "name": "The Three Weights Rule", "body": "400, 500 and 700 are the only weights shipped. Light and Semibold stay off until the designer uses them (PRD §10.1).", "section": "typography" },
+      { "name": "The Thumb Rule", "body": "On phones every target is at least 44px tall (buttons, inputs, segmented options at 40px inside a 4px track), the screen's primary action is a sticky bottom bar with safe-area padding, and sheets rise from the bottom. From 640px controls tighten to 36 to 40px.", "section": "layout" },
+      { "name": "The Ledger Rule", "body": "Totals are one hairline-divided strip, never a row of separate tiles. On phones the strip reads as a ledger: label left, amount right.", "section": "layout" },
+      { "name": "The Edge-to-Edge Device Rule", "body": "The viewport covers the notch (viewport-fit cover, theme colour brand-900), and every bottom-anchored surface adds `env(safe-area-inset-bottom)` to its padding.", "section": "layout" },
+      { "name": "The Ring Not Shadow Rule", "body": "A card at rest gets the hairline ring, never a shadow. A shadow means the thing floats, moves or is being hovered.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do lead every money surface with the money bridge or a bold tabular amount; the amounts and the gap between them come first.",
+      "Do put white cards with a 1px ink-at-10% ring on the #F8FAF6 ground; keep 14px card corners and 10px control corners.",
+      "Do use brand-700 for green text and actions, and brand-900 for hover, Paid and dark slabs.",
+      "Do keep mint as a fill or as text and icons on brand-900.",
+      "Do make phone targets 44px, put the primary action in the sticky bottom bar, and add `env(safe-area-inset-bottom)` to anything bottom-anchored.",
+      "Do open every flow in the shared action sheet and run every on-chain action through the transaction stepper.",
+      "Do tint shadows with brand-900 and reserve them for things that float or are hovered.",
+      "Do use the single ease-out curve and gate any spatial motion behind reduced-motion.",
+      "Do use Lucide icons at one stroke weight, 14 to 20px."
+    ],
+    "donts": [
+      "Don't set mint text on a light background.",
+      "Don't split totals into a row of separate stat tiles; use the hairline strip.",
+      "Don't show status by colour alone or invent badge colours outside PRD §10.1.",
+      "Don't add weights other than 400, 500 and 700, uppercase labels or letter-spaced labels.",
+      "Don't redraw the logo or mark in CSS or code (PRD §10.1); use the designer's SVGs when they land.",
+      "Don't use the slanted parallelogram planes anywhere but the landing hero, and add no other illustrations (PRD §10.1).",
+      "Don't add a dark theme; dark brand-900 slabs inside the light theme are part of the world (PRD §6.2).",
+      "Don't put a shadow on a resting card, or use grey or hard offset shadows."
+    ],
+    "openDecisions": [
+      "Landing hero line above the H1 (dark logo plus tagline): pinned by PRD §9.2, banned by the craft floor as a kicker; awaiting the owner. One-off, not a pattern.",
+      "Logo SVGs, mark and favicon pending from the designer; components/logo.tsx is a text stand-in, not the logo.",
+      "Mint awaiting designer confirmation (PRD §21); danger and warning are Tailwind stand-ins."
+    ]
+  }
+}

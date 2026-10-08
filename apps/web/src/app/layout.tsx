@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 import { NetworkBanner } from "@/components/network-banner";
 import { SiteHeader } from "@/components/site-header";
@@ -18,6 +18,11 @@ export const metadata: Metadata = {
     "revine. helps Indonesian SMEs sell unpaid invoices to financiers and receive cash now. Testnet demo on Sepolia.",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#0b1f1a", // the testnet strip at the very top (brand-900); light theme only
+  viewportFit: "cover",
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${satoshi.variable} h-full antialiased`}>
@@ -27,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SiteHeader />
           <NetworkBanner />
           <main className="flex flex-1 flex-col">{children}</main>
-          <Toaster position="top-center" />
+          <Toaster />
         </TooltipProvider>
       </body>
     </html>

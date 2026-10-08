@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
-import { PlaceholderPage } from "@/components/placeholder-page";
+import { BuyerDashboard } from "./buyer-dashboard";
 
 export const metadata: Metadata = { title: "Buyer" };
 
 export default function BuyerPage() {
-  return <PlaceholderPage title="Buyer dashboard" section="§9.8" />;
+  return <BuyerDashboard />;
 }

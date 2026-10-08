@@ -1,22 +1,25 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import { PlaceholderPage } from "@/components/placeholder-page";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { InvoiceSummary } from "./invoice-summary";
+import { InvoiceDetail } from "./invoice-detail";
 
 export const metadata: Metadata = { title: "Invoice" };
 
 export default function InvoicePage({ params }: PageProps<"/invoice/[id]">) {
   return (
-    <PlaceholderPage title="Invoice detail" section="§9.10">
-      {/* With Cache Components, params are runtime data and must be read inside Suspense. */}
-      <Suspense fallback={<Skeleton className="h-48 w-full rounded-xl" />}>
-        {params.then(({ id }) => (
-          <InvoiceSummary rawId={id} />
-        ))}
-      </Suspense>
-    </PlaceholderPage>
+    // With Cache Components, params are runtime data and must be read inside Suspense.
+    <Suspense
+      fallback={
+        <div className="mx-auto w-full max-w-5xl px-4 pt-10">
+          <Skeleton className="h-64 w-full rounded-xl" />
+        </div>
+      }
+    >
+      {params.then(({ id }) => (
+        <InvoiceDetail rawId={id} />
+      ))}
+    </Suspense>
   );
 }

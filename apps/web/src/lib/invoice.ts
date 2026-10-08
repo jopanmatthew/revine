@@ -47,3 +47,18 @@ const STATUS_LABELS: Record<Role, Record<InvoiceStatus, string>> = {
 export function statusLabel(status: InvoiceStatus, role: Role = "seller"): string {
   return STATUS_LABELS[role][status];
 }
+
+/** The latest on-chain timestamp on the invoice. */
+export function lastActivity(invoice: Invoice): number {
+  return Math.max(invoice.createdAt, invoice.respondedAt, invoice.listedAt, invoice.financedAt, invoice.paidAt);
+}
+
+/** Changed in the last few seconds: rows use it to settle in with a brief highlight. */
+export function isFresh(invoice: Invoice, now = nowSeconds()): boolean {
+  return now - lastActivity(invoice) <= 15;
+}
+
+/** "1 invoice", "3 invoices". */
+export function plural(count: number, noun: string): string {
+  return `${count} ${count === 1 ? noun : `${noun}s`}`;
+}

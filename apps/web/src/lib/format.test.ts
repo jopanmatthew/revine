@@ -13,6 +13,7 @@ import {
   formatNumber,
   formatPercent,
   formatRupiah,
+  formatRupiahCompact,
   formatTimeAgo,
   priceFromDiscount,
   profitOf,
@@ -92,4 +93,11 @@ test("relative times and short addresses", () => {
   assert.equal(formatTimeAgo(now - 2 * 3_600, now), "2 h ago");
   assert.equal(formatTimeAgo(now - 3 * 86_400, now), "3 days ago");
   assert.equal(shortAddress("0x1234567890abcdef1234567890abcdef123456ab"), "0x12…ab");
+});
+
+test("compact Rupiah for tight spots", () => {
+  assert.equal(formatRupiahCompact(9_999_999_999n), "Rp10 M");
+  assert.equal(formatRupiahCompact(1_500_000_000n), "Rp1,5 M");
+  assert.equal(formatRupiahCompact(25_400_000n), "Rp25,4 jt");
+  assert.equal(formatRupiahCompact(950_000), "Rp950.000");
 });

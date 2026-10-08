@@ -13,10 +13,12 @@
 | Product | revine. — invoice financing for Indonesian SMEs (UMKM), with zero-knowledge privacy |
 | Tagline | Turn invoices into opportunities. |
 | Event | ETHJKT hackathon, about 12 hours of build time |
-| Last updated | 8 Oct 2026 |
+| Last updated | 9 Oct 2026 |
 | Source of truth | This file. Code follows the PRD. If a decision changes, update this file and §23 Changelog first, then the code. |
 
 **How to read this:** everyone reads §1–§11. Engineers and AI coding agents read everything. In prompts, refer to sections by number ("build §9.6").
+
+**Build day 2:** `PRD-day2.md` is the plan for what's left, who does it and in what order. It never overrides this file.
 
 ## Contents
 
@@ -103,6 +105,17 @@ revine. is built **for the seller**. The financier is the other side of the mark
 | Buyer | RM Selera Kita | A restaurant ("RM" = rumah makan) |
 | Financier | Modal Maju | A small financing company |
 
+**Extra mock cast** (mock data only, so the marketplace, the Companies tab and the buyer payment record have a field; never seeded on Sepolia):
+
+| Role | Name | Notes |
+|---|---|---|
+| Seller | Toko Rasa Nusantara | Has a credit badge (Rp50 jt+); its profile ad has expired |
+| Seller | Konveksi Maju Jaya | Active profile ad; one rejected invoice and one expired listing |
+| Seller | Percetakan Sinar Abadi | One financed invoice 40 days overdue, one repaid late |
+| Buyer | Kedai Kopi Lestari | Left a financed invoice overdue: **Risky** |
+| Buyer | Hotel Puri Asri | One late repayment: **Mixed** |
+| Buyer | Katering Ibu Ani | No financed history yet: **New buyer** |
+
 ## 5. What "done" means for v26.0
 
 v26.0 is done when **all** of these are true on the deployed Vercel URL:
@@ -135,6 +148,12 @@ Build strictly in this order. Don't start a priority until the one above it work
 - Transaction stepper, network guard, testnet strip, friendly errors (§11)
 - Mock mode for frontend development (§16.3)
 
+**Added during the build (in scope, frontend only).** These read on-chain data the contracts already store, or are mock-only. They add nothing to the contracts or the API routes, and they're already built:
+- Buyer payment record (§7) on marketplace cards, the buy sheet and the invoice page
+- Companies tab with each seller's closed-invoice record (§7, §9.9)
+- Profile ads in the Companies tab: UI and mock data only, no payments (§7, §6.2)
+- Landing calculator, product stage and tabbed How it works (§9.2)
+
 **P1 — ZK credit badge**
 - Mock attester API, credit circuit and verifier, `/seller/credit` page, badge on marketplace cards and the invoice page
 
@@ -151,7 +170,7 @@ Build strictly in this order. Don't start a priority until the one above it work
 
 If it isn't in §6.1, don't build it. In particular, v26.0 has **none** of these:
 - Real money, bank transfers, real stablecoins, fiat on/off-ramps
-- Platform fees in contracts, subscriptions, paywalls
+- Platform fees in contracts, subscriptions, paywalls. (Profile ads, §7, are UI and mock data only: nothing is charged and nothing is on-chain in v26.0.)
 - Email/password accounts, sign-up, profile pages, KYC/KYB
 - Admin panel, owner or admin functions, pausing, upgradeable contracts
 - Off-chain buyers (confirming or paying without a wallet)
@@ -189,6 +208,9 @@ Locked down so nobody, human or AI, invents pricing.
 | Credit badge tiers | 6-month revenue above Rp50 jt, Rp100 jt, Rp250 jt or Rp500 jt ("jt" = juta, million) |
 | Credit badge validity | 30 days from the attestation time |
 | Mock revenue | Demo seller wallet: Rp180.000.000. Any other wallet: Rp120.000.000 |
+| Buyer payment record | Computed in the frontend from on-chain invoice data, never stored. Counts only the buyer's invoices that a financier funded (`financedAt > 0`) with a term of at least 7 days: **on time** = paid on or before the due date, **late** = paid after it (with days late), **overdue** = financed, unpaid and past due. On-time rate is weighted by Rupiah amount. Tiers: **Reliable** = at least 3 counted invoices, no overdue, ≥ 90% on time; **Risky** = any overdue, or < 70% on time; **Mixed** = everything else; **New buyer** = no counted invoices yet |
+| Company profiles | One row per seller, computed from on-chain invoice data: invoices financed and the share **repaid on time** (paid on or before due, over financed invoices that are paid or overdue), **confirmed by buyers** (confirmed ÷ confirmed + rejected), Rupiah financed to date, invoice size range, open for financing now, average time from listing to financing, top buyers, credit badge |
+| Profile ads | A seller can pay to boost their company profile (UI and mock data only in v26.0, no payments). An active ad (now before its end time) pins the profile to the top of the Companies list, ordered by ad tier then bid; expired ads rank as organic. Boosted rows always carry a visible **Ad** label, appear once, and an ad never changes the profile's numbers or record |
 | Platform fee | **None in v26.0 contracts.** For the pitch only, proposed business model: 1% fee per financed invoice (§21) |
 
 ## 8. Core flow and invoice statuses
@@ -256,14 +278,15 @@ This is the complete list. Don't add pages.
 | `/seller/new` | Create invoice (§9.5) |
 | `/seller/credit` | Credit badge, P1 (§9.7) |
 | `/buyer` | Buyer dashboard (§9.8) |
-| `/financier` | Financier: Marketplace and Portfolio tabs (§9.9) |
+| `/financier` | Financier: Marketplace, Companies and Portfolio tabs (§9.9) |
 | `/invoice/[id]` | Invoice detail. Public; no wallet needed to view (§9.10) |
 | `/api/details`, `/api/attest` | API routes (§15) |
 
 ### 9.1 Global layout and shared behavior
 
 - **Testnet strip** at the very top, always visible: "Testnet demo on Sepolia · No real money".
-- **Header:** logo (`logo-horizontal-light.svg`, links to `/`), role switcher (segmented control: Seller · Buyer · Financier, each navigates to its dashboard), mIDR balance pill, connect button (RainbowKit).
+- **Header:** on `brand-900`, running straight into the landing hero and each screen's cover band: logo (`logo-horizontal-dark.svg`, links to `/`), role switcher (pill segmented control: Seller · Buyer · Financier, each navigates to its dashboard), mIDR balance pill, connect button (RainbowKit).
+- **App look** (same as the landing, §9.2): each screen opens with a `brand-900` cover band holding its one big number and its tabs as pills; the content sits on white sheets with large rounded corners that overlap the band's bottom edge. Buttons are pills.
 - **Balance pill:** shows "Rp100.000.000 mIDR". Clicking opens a menu with "Get 100.000.000 test mIDR" (faucet transaction) and "Get Sepolia ETH for gas" (external link). When Sepolia ETH is below 0,01, show an amber dot and "Low gas balance".
 - **Network banner:** if the wallet is on another network, show "revine. runs on Sepolia. You're on {network}." with [Switch to Sepolia]. All actions stay disabled until the wallet switches.
 - **Not connected:** dashboards show a centered card, "Connect your wallet to continue", with a connect button. `/` and `/invoice/[id]` work without a wallet.
@@ -278,13 +301,13 @@ This is the complete list. Don't add pages.
 ### 9.2 Landing `/`
 
 Sections, in order:
-1. **Hero**, on a `brand-900` background with the dark logo and large slanted shapes from the mark (§10.1). Eyebrow: "Turn invoices into opportunities." H1: "Get paid today for invoices due next month." Subtitle: "revine. helps Indonesian SMEs sell unpaid invoices to financiers and receive cash now. Ownership and payments are tracked on Ethereum. Your business details stay private with zero-knowledge proofs." Buttons: [Launch app] → `/app`, [How it works] → scrolls down.
-2. **Example card:** "Rp10.000.000 invoice, due in 30 days → Rp9.700.000 in your wallet today."
-3. **How it works:** the five steps from §8.1, each labeled with its role.
-4. **Three roles:** Seller, Buyer, Financier, one line each.
+1. **Hero**, on a `brand-900` background with the dark logo and large slanted shapes from the mark (§10.1), centered. Eyebrow: "Turn invoices into opportunities." H1: "Get paid today for invoices due next month." Subtitle: "revine. helps Indonesian SMEs sell unpaid invoices to financiers and receive cash now. Ownership and payments are tracked on Ethereum. Your business details stay private with zero-knowledge proofs." Buttons: [Launch app] → `/app`, [How it works] → scrolls down. Below the copy, a **product stage** built from the app's own UI (coded, not screenshots): the financier marketplace in a browser window and the seller's phone. Once on load, the financier buys invoice #12 and the phone shows "You got paid Rp9.700.000 🎉". Reduced motion shows the end state.
+2. **Example card**, as a calculator: "Rp10.000.000 invoice, due in 30 days → Rp9.700.000 in your wallet today." is the default, and the sentence updates as the visitor changes the amount, the term (14, 30, 60 or 90 days) and the discount (1–10%, as in §9.6). Shows what the seller gets today, what the financier earns, and what the buyer pays on the due date.
+3. **How it works:** the five steps from §8.1, each labeled with its role, as pill tabs. Each step shows a small piece of the app for that step. Tabs advance on their own while the section is in view, pause on hover or focus, and don't advance with reduced motion.
+4. **Three roles:** Seller, Buyer, Financier, one line each, shown as "one invoice, three views": invoice #12 as each role sees it, with a link to that view.
 5. **Why on-chain:** Clear ownership · No double-selling · Automatic payment.
-6. **Private by design:** "Line items, prices and your revenue never go on-chain. Zero-knowledge proofs show they're valid without revealing them."
-7. **Footer**, on `brand-900` with the dark logo: "Turn invoices into opportunities." · "Testnet demo on Sepolia. No real money. Built for ETHJKT." · GitHub link.
+6. **Private by design:** "Line items, prices and your revenue never go on-chain. Zero-knowledge proofs show they're valid without revealing them." When the section comes into view, the invoice's line items are covered and its fingerprint is written to the on-chain record.
+7. **Footer**, on `brand-900` with the dark logo, opening with the supporting line "Capital today. Growth tomorrow." and [Launch app]: "Turn invoices into opportunities." · "Testnet demo on Sepolia. No real money. Built for ETHJKT." · GitHub link.
 
 ### 9.3 Role picker `/app`
 
@@ -293,21 +316,22 @@ Sections, in order:
   - **"I sell goods"** — "Get paid now for your invoices" → `/seller`
   - **"I owe an invoice"** — "Confirm and pay invoices sent to you" → `/buyer`
   - **"I have capital"** — "Finance verified invoices and earn" → `/financier`
+- Each card also shows what the role looks like on invoice #12: "+Rp9.700.000 today" (seller), "Rp10.000.000 on the due date" (buyer), "+3,09% in 30 days" (financier).
 - Remember the last role in browser storage (wrapped in try/catch). On the next visit, `/app` goes straight to it.
 - Roles are views, not account types. Any wallet can use any role; the contract enforces who can do what on each invoice.
 
 ### 9.4 Seller dashboard `/seller`
 
-- **Top:** "Hi, {demo name or 0x12…ab}", credit badge chip (or a "Get a credit badge" link to `/seller/credit`), primary button [New invoice].
-- **Stat tiles:**
+- **Cover band** (§9.1): "Hi, **{demo name or 0x12…ab}**", credit badge chip (or a "Get a credit badge" link to `/seller/credit`), primary button [New invoice] (sticky at the bottom on phones).
+- **Figures on the cover:**
+  - *Ready to finance* (the big number): total amount of my Verified invoices, with the count in the line below it.
   - *Waiting for buyer:* count of my Created invoices.
-  - *Ready to finance:* count and total amount of my Verified invoices.
   - *Cash received:* sum of `askPrice` for my invoices with `financedAt > 0`, plus `faceAmount` for my Paid invoices with `financedAt = 0` (repaid directly to me).
-- **Tabs:** All · Waiting for buyer · Ready to finance · Listed · Financed · Paid. Rejected invoices appear under All.
-- **Invoice row/card:** buyer name, #id, amount, due ("in 28 days" or "Overdue 3 days"), status badge, and one action:
+- **Tabs** (pills on the cover, each with its count): All · Waiting for buyer · Ready to finance · Listed · Financed · Paid. Rejected invoices appear under All.
+- **Invoice row:** buyer initial and name, #id, due ("in 28 days" or "Overdue 3 days"), status badge, amount with the date of the last change. Tapping the row opens `/invoice/[id]`. At most one button:
   - Verified → [Get financed] (opens §9.6)
   - Listed → [Unlist], plus a "Listing expired" tag if past due
-  - anything else → [View] → `/invoice/[id]`
+  - anything else → no button
 - Newest first.
 - **Empty state:** "No invoices yet. Create your first one — it takes about a minute." [New invoice]
 
@@ -359,7 +383,9 @@ Validation runs inline on blur and on submit, using the messages in §11.
 
 ### 9.8 Buyer dashboard `/buyer`
 
-Tabs:
+**Cover band** (§9.1): "Hi, **{name}**"; the big number is *You owe* (sum of amounts To pay), with the count and how many are overdue; figures *To confirm* (count) and *Next due*.
+
+Tabs (pills on the cover). Tapping a row opens `/invoice/[id]`:
 - **To confirm:** Created invoices where buyer = me. Row: seller name, amount, due date, "sent 2 h ago", [Review].
 - **To pay:** Verified, Listed or Financed invoices where buyer = me. Overdue first, then soonest due. Row: seller, amount, due countdown, "Pay to: {current holder name}", [Pay].
 - **History:** Paid and Rejected.
@@ -381,30 +407,38 @@ Tabs:
 
 ### 9.9 Financier `/financier`
 
+**Cover band** (§9.1), shown on every tab: "Hi, **{name}**"; the big number is *Expected* (amounts still due to me); figures *Invested* · *Received* · *Profit so far* (definitions under Portfolio). Tabs (pills on the cover): Marketplace · Companies · Portfolio. On Marketplace, the sort menu and the "Credit badge only" toggle sit next to the tabs.
+
 **Marketplace tab**
 - Shows Listed invoices that aren't past due, where seller ≠ me.
 - Sort: Highest return (default) · Soonest due · Newest. Toggle: "Credit badge only".
-- **Card:** amount; price; "+Rp300.000 · 3,09%"; "≈37,6% per year, if repaid on time"; due "in 30 days · 7 Nov 2026"; seller name with credit badge chip (or "No credit badge"); buyer name with "Buyer confirmed ✓"; "Details private 🔒"; [Finance this invoice].
+- **Card:** amount; price; "+Rp300.000 · 3,09%"; "≈37,6% per year, if repaid on time"; due "in 30 days · 7 Nov 2026"; seller name with credit badge chip (or "No credit badge"); buyer name with "Buyer confirmed ✓" and the buyer's payment record (§7), e.g. "Reliable · 6 paid on time, 1 late" or "New buyer · no payment record yet"; "Details private 🔒"; [Finance this invoice].
 - **Empty state:** "No invoices open for financing right now. New ones appear here automatically."
 
 **Buy sheet**
 - "You pay Rp9.700.000 now. You receive Rp10.000.000 when RM Selera Kita pays on 7 Nov 2026."
+- Buyer's payment record in full (§7): on time, late (days), overdue, how many different sellers, and the history between this seller and this buyer. For a new buyer: "New buyer · no payment record yet. Price the risk: this is their first financed invoice on revine."
 - Risk note, always shown: "If the buyer doesn't pay, you can lose money. revine. doesn't guarantee repayment."
 - Balance check, with a faucet link if short.
 - Stepper: Allow revine. to use Rp9.700.000 → Confirm in your wallet → Waiting for Sepolia → "You now hold invoice #12 ✓".
 - If someone else bought it first (`WrongStatus` in this flow): "Someone else just financed this invoice." [Back to marketplace], and the list refreshes.
 
+**Companies tab**
+- One row per seller (§7 Company profiles), styled after P2P merchant lists: initial avatar (green dot when the seller has an open listing), name, credit badge chip, "Financed 6 (83% repaid on time)" and "100% confirmed by buyers", Rupiah financed to date as the big figure, invoice size range, open for financing now, top buyers, average time to get financed, and [See].
+- Profile ads (§7) pin to the top with an **Ad** label; everyone else follows by Rupiah financed.
+- **[See] opens the company's record:** a sheet listing every closed invoice (sold, repaid, rejected or expired) with its timestamps (created, confirmed or rejected, listed, financed, due, paid) and a plain status-and-reason line, e.g. "Repaid 12 days after the due date", "Buyer hasn't paid: 40 days past due", "Rejected by the buyer; no reason is recorded on-chain", "Listed but not financed before the due date". Each links to its invoice page.
+
 **Portfolio tab**
 - Invoices where holder = me and `financedAt > 0` (Financed and Paid).
-- **Stat tiles:** Invested (sum of prices paid) · Expected (amounts still due) · Received (amounts repaid) · Profit so far (amount − price, summed over Paid invoices).
-- **Row:** #id, buyer, due countdown or Overdue tag, price paid, amount due, status, [View].
+- **Figures** (on the cover): Invested (sum of prices paid) · Expected (amounts still due) · Received (amounts repaid) · Profit so far (amount − price, summed over Paid invoices).
+- **Row:** buyer initial and name, #id, price paid, due countdown or Overdue tag (or the repaid date), status, amount due. Tapping the row opens `/invoice/[id]`; no button.
 - **Empty state:** "You haven't financed any invoices yet." [Browse marketplace]
 
 ### 9.10 Invoice detail `/invoice/[id]`
 
 Public page: anyone can see the public data without a wallet.
-- **Header:** "Invoice #12", status badge, Overdue tag if any.
-- **Facts:** amount, due date, seller, buyer, current holder, price (if listed or financed).
+- **Cover band** (§9.1): "Invoice **#12**", status badge, Overdue tag if any; the amount as the big number with the due date; seller, buyer (with their payment record, §7) and current holder; the role's action button (below).
+- **Facts:** amount, due date, seller, buyer, current holder, and price → amount (if listed or financed).
 - **Timeline:** Created → Confirmed (or Rejected) → Listed → Financed → Paid, each with its time from the contract timestamps. Future steps are grayed out.
 - **Private details:** the seller and buyer see [Show private details] → wallet verification → items, description, integrity check. Everyone else sees "🔒 Line items and description are private. Only the seller and buyer can see them."
 - **On-chain details** (collapsed by default): token ID, contract address (Etherscan link), fingerprint (shortened, with copy), invoice proof status ("Verified on-chain at creation ✓" once P2 ships, "Fingerprint only" before), seller credit badge.
@@ -426,8 +460,8 @@ Source: the designer's revine. brand board. The designer owns the brand; these a
 
 | File | Use |
 |---|---|
-| `logo-horizontal-light.svg` | Header and light sections |
-| `logo-horizontal-dark.svg` | Dark landing hero and footer |
+| `logo-horizontal-light.svg` | Light sections |
+| `logo-horizontal-dark.svg` | Header, landing hero and footer (all on `brand-900`) |
 | `mark.svg` | Icon-only mark for loading states and tight spaces |
 | `mark-flat.svg` | Single-color mark for the favicon and anything under 32px, where the gradient turns muddy |
 | `favicon.ico`, `apple-icon.png`, `og-image.png` | Mark on a `brand-900` rounded square, like the app icon on the board |
@@ -438,7 +472,7 @@ Never redraw the logo in CSS or code. The slanted parallelogram shapes from the 
 
 | Token | Hex | Use |
 |---|---|---|
-| `brand-900` (primary dark green) | #0B1F1A | Landing hero and footer backgrounds, Paid badge, hover state of primary buttons |
+| `brand-900` (primary dark green) | #0B1F1A | Header, landing hero, app cover bands and footer backgrounds, Paid badge, hover state of primary buttons |
 | `brand-700` (secondary green) | #16634B | Primary buttons with white text (about 7:1 contrast), links, focus rings |
 | `mint` (accent green) | #35CB9B, to be confirmed (§21) | Logo dot, highlights, Listed badge, accents on dark backgrounds |
 | `bg` (light background) | #F8FAF6 | App background |
@@ -616,6 +650,8 @@ There is no separate backend server. The backend is the contracts, two Next.js A
 ```
 revine/
 ├─ PRD.md                      ← this file
+├─ PRD-day2.md                 ← build plan for day 2 (never overrides PRD.md)
+├─ PRODUCT.md, DESIGN.md       ← design context (DESIGN.md needs regenerating after the 9 Oct redesign)
 ├─ CLAUDE.md                   ← Appendix A
 ├─ .cursor/rules/revine.mdc    ← Appendix A
 ├─ README.md
@@ -624,15 +660,21 @@ revine/
 │  └─ src/
 │     ├─ fonts/                ← Satoshi files (§10.1)
 │     ├─ app/                  ← routes from §9.0, plus app/api/details and app/api/attest
-│     ├─ components/           ← StatusBadge, RupiahAmount, AddressName, TxStepper, CreditBadgeChip, EmptyState, NetworkBanner, TestnetStrip, BalancePill
+│     │  └─ _landing/          ← landing pieces: hero stage, calculator, How it works, privacy demo
+│     ├─ components/           ← Cover, Ledger, Panel, StatusBadge, RupiahAmount, TxStepper, ActionSheet, sheets/,
+│     │                          CreditBadgeChip, BuyerRecordChip, MoneyBridge, NetworkBanner, TestnetStrip, BalancePill, WalletButton
 │     ├─ lib/
 │     │  ├─ types.ts           ← §16.1
-│     │  ├─ hooks/             ← §16.2
-│     │  ├─ mock.ts            ← §16.3
-│     │  ├─ contracts.ts       ← §16.4
+│     │  ├─ hooks/             ← §16.2 (mock and real versions side by side)
+│     │  ├─ mock.ts            ← §16.3 data; mock-actions.ts simulates the contract
+│     │  ├─ contracts.ts       ← §16.4 (day 2)
 │     │  ├─ demo-names.ts      ← address → demo name
-│     │  ├─ fingerprint.ts     ← text hash and light-mode fingerprint (§14.2)
-│     │  └─ format.ts          ← Rupiah, percent, dates, return math (§7)
+│     │  ├─ fingerprint.ts     ← text hash and light-mode fingerprint (§14.2, day 2)
+│     │  ├─ format.ts          ← Rupiah, percent, dates, return math (§7)
+│     │  ├─ buyer-record.ts    ← buyer payment record (§7)
+│     │  ├─ company-profiles.ts← company profiles, profile ads, closed-invoice outcomes (§7, §9.9)
+│     │  ├─ messages.ts        ← §11 strings
+│     │  └─ *.test.ts          ← unit tests (node --test)
 │     └─ zk/                   ← compiled circuit JSON + prover.ts
 ├─ contracts/                  ← Foundry project
 │  ├─ src/                     ← MockIDR.sol, RevineInvoice.sol, verifiers/
@@ -978,6 +1020,7 @@ useWallet(): {
   switchToSepolia: () => void;
 } // in mock mode: the demo account picked in WalletButton
 useInvoices(): { invoices: Invoice[]; isLoading: boolean; error: Error | null; refetch: () => void } // polls every 10 s
+useProfileAds(): { ads: { seller: Address; tier: number; bid: number; endsAt: number }[]; isLoading: boolean } // off-chain; mock-only in v26.0
 useInvoice(id: bigint): { invoice: Invoice | null; isLoading: boolean; error: Error | null }
 useCreditBadge(address?: Address): { badge: CreditBadge | null; isLoading: boolean }
 useBalances(address?: Address): { midr: bigint; eth: bigint; isLoading: boolean }
@@ -1009,6 +1052,8 @@ Every action reports its progress through `onStep`, and `TxStepper` renders it. 
 - With `NEXT_PUBLIC_USE_MOCKS=true`, the hooks read from `src/lib/mock.ts`, and actions walk through each step with about 1-second delays.
 - Mock data must include: one invoice in every status, one overdue Financed invoice, one expired listing, one seller with a credit badge and one without, and an account with no invoices.
 - Mocks use exactly the same types as real data. Swapping mocks for the real hooks must not require changing any component.
+- Mock data also includes the extra mock cast from §4 and two profile ads (one active, one expired). It's shared across browser tabs (localStorage `revine.mockData.v3`); the connected mock account is per tab (sessionStorage).
+- The account menu lets you pick a demo account and simulate a wrong network or a cancelled wallet prompt, and has [Reset demo data] and [Load worst-case data] (long text, amounts at the §7 limits, about 200 invoices).
 
 ### 16.4 `src/lib/contracts.ts`
 
@@ -1060,6 +1105,7 @@ Addresses and ABIs (exported `as const` so viem and wagmi infer types) for `Mock
 
 ### 18.3 Frontend
 
+- **Unit tests** (`npm test` in `apps/web`, node:test): format and return math, buyer payment record, company profiles, profile ad ranking and closed-invoice outcomes. Keep them green.
 - **Mock mode:** every screen in every state: loading, empty, error, each status, overdue, expired listing.
 - **Real mode on the Vercel URL** (not just localhost): full flow with three wallets in three browser profiles; both proofs generate; wrong-network banner; insufficient mIDR; rejected signature; 375px width.
 - **Copy check:** every error string matches §11.
@@ -1078,12 +1124,12 @@ Setup: one laptop, three browser profiles side by side: Beras Bu Sari (seller), 
 
 | Time | Window | Show | Say |
 |---|---|---|---|
-| 0:00 | Landing | Hero and example card | "Bu Sari delivered Rp10 juta of rice. The restaurant pays in 30 days. She needs cash today." |
+| 0:00 | Landing | Hero: the product stage plays the "You got paid" moment; the calculator below | "Bu Sari delivered Rp10 juta of rice. The restaurant pays in 30 days. She needs cash today." |
 | 0:20 | Seller | New invoice → Fill demo invoice → point at "public vs private" → Create | "The line items stay private. Her browser creates a zero-knowledge proof that they add up to the public total." |
 | 0:50 | Buyer | To confirm → Review → "✓ matches fingerprint" → Confirm | "The restaurant sees the real details and checks them against the on-chain fingerprint." |
 | 1:10 | Seller | Dashboard shows Ready to finance → Credit badge → demo bank Rp180 jt → prove Rp100 jt+ | "She proves her revenue is above Rp100 juta without revealing the number." |
 | 1:35 | Seller | Get financed → 3% → "You receive Rp9.700.000 today" → List | "She picks her price and sees exactly what she gets." |
-| 1:50 | Financier | Marketplace card: return, badge, "Details private" → Finance | "The financier sees what they need to judge risk, not Bu Sari's business secrets." |
+| 1:50 | Financier | Marketplace card: return, credit badge, buyer's payment record, "Details private" → Finance | "The financier sees what they need to judge risk, not Bu Sari's business secrets." |
 | 2:10 | Seller | "You got paid Rp9.700.000 🎉" toast, balance up | "Cash today, not in 30 days." |
 | 2:20 | Buyer | To pay → Pay Rp10.000.000 → goes to Modal Maju | "On the due date the restaurant pays, and the contract routes the money to the financier automatically." |
 | 2:40 | Invoice page | Timeline, Etherscan link, proofs verified | "Every step is on-chain and verifiable." |
@@ -1129,7 +1175,13 @@ Setup: one laptop, three browser profiles side by side: Beras Bu Sari (seller), 
 | 8 Oct 2026 | Timeline from struct timestamps, not event logs | Free RPC plans limit log queries |
 | 8 Oct 2026 | Brand from the designer's brand board: Satoshi, dark-green palette, mint accent, tagline "Turn invoices into opportunities." | One consistent look across app, deck and video |
 | 8 Oct 2026 | Mint accent is never used as text on light backgrounds | About 2:1 contrast, hard to read |
+| 8 Oct 2026 | Companies tab with transparent closed-invoice records, and labelled profile ads (§7, §9.9) | Investors asked to see each company's full history, failures included; ads are the proposed monetization, kept honest with an Ad label and no effect on any record. UI and mock data only, no payments in v26.0 |
+| 8 Oct 2026 | Buyer payment record (§7) shown to financiers, computed from on-chain repayment timestamps | Financiers' main doubt is whether the buyer pays; the chain already holds tamper-proof due and paid dates. Only financier-funded invoices count, so a seller and buyer can't inflate it with fake invoices |
 | 8 Oct 2026 | Added `useWallet()` to the hooks in §16.2 | Header, wallet button, network banner and dashboards need the connected address and network without calling wagmi directly |
+| 9 Oct 2026 | Landing (§9.2) is Pluang-inspired: centered hero over the product, interactive example, tabbed steps | Owner request; shows the product working instead of describing it |
+| 9 Oct 2026 | Seller, buyer, financier and every other screen use the landing's look; the header turns `brand-900` with the dark logo | Owner request; one visual language from the landing into the app |
+| 9 Oct 2026 | List rows open their invoice when tapped; only real actions get a button (no [View]) | Fewer buttons per row and a bigger touch target |
+| 9 Oct 2026 | Features added during the build (buyer payment record, Companies tab, profile ads, landing calculator) are in scope as listed in §6.1 | They were built on owner request and read data the contracts already store, so they add no contract or API work |
 
 ## 23. Changelog
 
@@ -1137,6 +1189,11 @@ Setup: one laptop, three browser profiles side by side: Beras Bu Sari (seller), 
 |---|---|---|
 | v26.0 | 8 Oct 2026 | First PRD, from the team chat, the planning session and the brand board |
 | v26.0 | 8 Oct 2026 | §16.2: added `useWallet()` (connected address and network; in mock mode, the demo account picked in WalletButton) |
+| v26.0 | 8 Oct 2026 | §7, §9.9, §9.10: buyer payment record and the "New buyer" state |
+| v26.0 | 8 Oct 2026 | §7, §9.9, §16.2: Companies tab, closed-invoice record, profile ads and `useProfileAds()` |
+| v26.0 | 9 Oct 2026 | §9.2: landing redesign (Pluang-inspired): centered hero with a coded product stage, calculator example card, tabbed How it works, roles as "one invoice, three views", footer CTA |
+| v26.0 | 9 Oct 2026 | §9.1, §10.1: app screens follow the landing's look (dark header and cover band, overlapping white sheets, pill buttons and tabs) |
+| v26.0 | 9 Oct 2026 | End-of-day-1 cleanup so the PRD matches the build: §4 extra mock cast; §6.1 features added during the build; §6.2 profile ads note; §9.0 Companies tab; §9.3 role cards; §9.4, §9.8, §9.9, §9.10 cover bands, pill tabs and tap-to-open rows (no [View]); §12.3 repo structure; §16.3 mock data and account menu; §18.3 unit tests; §19 demo beats; pointer to `PRD-day2.md` |
 
 When something changes: update the relevant section, add a row to §22 if it's a decision, add a row here, then sync Appendix A if a rule changed.
 

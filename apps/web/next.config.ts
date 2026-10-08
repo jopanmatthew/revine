@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
+  // No Next.js badge over the UI in dev: the demo runs side by side in three windows.
+  devIndicators: false,
   partialPrefetching: true,
   turbopack: {
     rules: {

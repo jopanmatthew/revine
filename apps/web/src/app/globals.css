@@ -70,6 +70,9 @@
   --warning: oklch(96.2% 0.059 95.617); /* Tailwind amber-100 */
   --warning-foreground: oklch(47.3% 0.137 46.201); /* Tailwind amber-800 */
 
+  /* Motion (emil-design-eng): strong ease-out for UI, 150–250 ms. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
   /* shadcn theme mapped onto the brand. Cards and borders keep shadcn defaults (white cards on bg). */
   --background: var(--bg);
   --foreground: var(--ink);
@@ -117,5 +120,215 @@
   }
   html {
     @apply font-sans;
+    /* Mobile-native baseline: no gray tap flash, no landscape font inflation. */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    /* Browser surfaces carry the palette too. */
+    accent-color: var(--brand-700);
+    scrollbar-color: color-mix(in oklab, var(--ink-muted) 45%, transparent) transparent;
+  }
+  ::selection {
+    background-color: color-mix(in oklab, var(--mint) 40%, white);
+    color: var(--brand-900);
+  }
+  input,
+  textarea {
+    caret-color: var(--brand-700);
+  }
+  a,
+  button,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+}
+
+/* The Passbook signature: new money prints in. A ledger line whose status just changed gets a mint
+   underline that draws left to right, holds, then fades (data-driven, rare). */
+@keyframes revine-underline {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  35% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  80% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+@keyframes revine-print {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+[data-fresh] {
+  position: relative;
+}
+
+[data-fresh]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--mint);
+  transform-origin: left;
+  pointer-events: none;
+  animation: revine-underline 2400ms var(--ease-out) both;
+}
+
+[data-fresh] [data-print] {
+  animation: revine-print 700ms var(--ease-out) both;
+}
+
+/* Each finished step in the progress view prints in, like a passbook line. */
+li[data-state="done"] [data-step-label] {
+  animation: revine-print 500ms var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  li[data-state="done"] [data-step-label] {
+    animation: none;
+  }
+  [data-fresh]::after {
+    animation-duration: 1ms;
+    opacity: 0;
+  }
+  [data-fresh] [data-print] {
+    animation: none;
+  }
+}
+
+/* The landing example's term line draws once, from pay-now to get-later. */
+@keyframes revine-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes revine-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Landing (PRD §9.2). One authored moment, the hero stage; two explanations that run when seen
+   (How it works, Private by design). Everything starts visible without JS except what explains. */
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@keyframes revine-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes revine-stage {
+  from {
+    opacity: 0;
+    transform: translateY(64px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes revine-swap {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes revine-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+[data-hero-in] {
+  animation: revine-rise 820ms var(--ease-out) both;
+  animation-delay: calc(90ms * var(--i, 0) + 60ms);
+}
+
+[data-stage-in] {
+  animation: revine-stage 1100ms var(--ease-out) 380ms both;
+}
+
+/* Each How it works step prints its key figure as it appears. */
+[data-step-view] [data-print] {
+  animation: revine-print 700ms var(--ease-out) 260ms both;
+}
+
+/* Private by design: bars black out the line items, then the fingerprint is written. */
+[data-redact] {
+  clip-path: inset(0 100% 0 0);
+}
+
+[data-in] [data-redact] {
+  animation: revine-print 420ms var(--ease-out) both;
+  animation-delay: calc(110ms * var(--i, 0) + 250ms);
+}
+
+[data-type] {
+  clip-path: inset(0 100% 0 0);
+}
+
+[data-in] [data-type] {
+  animation: revine-print 900ms steps(11, end) 1100ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-hero-in],
+  [data-stage-in] {
+    animation-name: revine-appear;
+    animation-duration: 400ms;
+  }
+  [data-step-view] [data-print] {
+    animation: none;
+  }
+  [data-in] [data-redact],
+  [data-in] [data-type] {
+    animation: none;
+    clip-path: none;
   }
 }

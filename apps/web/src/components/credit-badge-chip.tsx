@@ -18,20 +18,25 @@ import { cn } from "@/lib/utils";
 export function CreditBadgeChip({
   address,
   hideIfNone = false,
+  tone = "light",
   className,
 }: {
   address?: Address;
   hideIfNone?: boolean;
+  tone?: "light" | "dark"; // dark: on the brand-900 cover band
   className?: string;
 }) {
   const { badge, isLoading } = useCreditBadge(address);
 
-  if (isLoading) return <Skeleton className={cn("h-5 w-36 rounded-4xl", className)} />;
+  if (isLoading) return <Skeleton className={cn("h-5 w-36 rounded-4xl", tone === "dark" && "bg-white/10", className)} />;
 
   if (!badge?.isValid) {
     if (hideIfNone) return null;
     return (
-      <Badge variant="outline" className={cn("text-ink-muted", className)}>
+      <Badge
+        variant="outline"
+        className={cn(tone === "dark" ? "border-white/20 text-white/70" : "text-ink-muted", className)}
+      >
         No credit badge
       </Badge>
     );
@@ -40,7 +45,13 @@ export function CreditBadgeChip({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Badge className={cn("border-brand-700/20 bg-brand-700/10 text-brand-700", className)} tabIndex={0}>
+        <Badge
+          className={cn(
+            tone === "dark" ? "border-mint/30 bg-mint/15 text-mint" : "border-brand-700/20 bg-brand-700/10 text-brand-700",
+            className,
+          )}
+          tabIndex={0}
+        >
           <ShieldCheckIcon data-icon="inline-start" />
           Revenue above {formatJuta(badge.threshold)}
         </Badge>

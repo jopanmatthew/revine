@@ -35,6 +35,15 @@ export function formatJuta(value: bigint | number): string {
   return `Rp${new Intl.NumberFormat("id-ID", { maximumFractionDigits: 1 }).format(juta)} jt`;
 }
 
+/** Short form for tight spots: 9999999999 → "Rp10 M", 25400000 → "Rp25,4 jt", 950000 → "Rp950.000". */
+export function formatRupiahCompact(value: bigint | number): string {
+  const n = Number(value);
+  const short = new Intl.NumberFormat("id-ID", { maximumFractionDigits: 1 });
+  if (Math.abs(n) >= 1_000_000_000) return `Rp${short.format(n / 1_000_000_000)} M`;
+  if (Math.abs(n) >= 1_000_000) return `Rp${short.format(n / 1_000_000)} jt`;
+  return formatRupiah(value);
+}
+
 /** 3.0928 → "3,09%"; 37.63 with 1 digit → "37,6%"; 3 → "3%". */
 export function formatPercent(value: number, maximumFractionDigits = 2): string {
   return `${new Intl.NumberFormat("id-ID", { maximumFractionDigits }).format(value)}%`;
@@ -101,6 +110,12 @@ export function toWibDateString(unixSeconds: number): string {
 export function formatDate(unixSeconds: number): string {
   const d = new Date((unixSeconds + WIB_OFFSET_SECONDS) * 1000);
   return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+
+/** Unix seconds → "7 Nov" (WIB), for the ledger's date column. */
+export function formatDayMonth(unixSeconds: number): string {
+  const d = new Date((unixSeconds + WIB_OFFSET_SECONDS) * 1000);
+  return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`;
 }
 
 /** Unix seconds → "7 Nov 2026, 14:05" (WIB). */

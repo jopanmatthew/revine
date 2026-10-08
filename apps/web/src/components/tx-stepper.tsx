@@ -3,8 +3,8 @@
 import { CheckCircle2Icon, CircleIcon, ExternalLinkIcon, Loader2Icon, MinusCircleIcon, XCircleIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
+import { ActionSheet } from "@/components/action-sheet";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { etherscanTxUrl } from "@/lib/config";
 import { isNeutralError, MESSAGES } from "@/lib/messages";
 import type { OnStep, TxStep } from "@/lib/types";
@@ -57,9 +57,11 @@ interface FlowState {
 
 const INITIAL: FlowState = { open: false, status: "idle", current: null, reached: [], slow: false };
 
+export type TxResult<T> = { ok: true; value: T } | { ok: false };
+
 export interface TxFlow extends FlowState {
-  /** Opens the stepper and runs an action from useRevineActions(). Resolves to undefined on failure. */
-  run: <T>(action: (onStep: OnStep) => Promise<T>) => Promise<T | undefined>;
+  /** Opens the stepper and runs an action from useRevineActions(). */
+  run: <T>(action: (onStep: OnStep) => Promise<T>) => Promise<TxResult<T>>;
   retry: () => void;
   close: () => void;
 }
@@ -71,7 +73,7 @@ export function useTxFlow(): TxFlow {
 
   useEffect(() => () => clearTimeout(slowTimer.current), []);
 
-  const run = useCallback(async <T,>(action: (onStep: OnStep) => Promise<T>): Promise<T | undefined> => {
+  const run = useCallback(async <T,>(action: (onStep: OnStep) => Promise<T>): Promise<TxResult<T>> => {
     lastAction.current = action;
     clearTimeout(slowTimer.current);
     setState({ ...INITIAL, open: true, status: "running" });
@@ -95,13 +97,13 @@ export function useTxFlow(): TxFlow {
     };
 
     try {
-      return await action(onStep);
+      return { ok: true, value: await action(onStep) };
     } catch (error) {
       // Actions report their own §11 message; this only catches ones that threw without it.
       setState((s) =>
         s.status === "error" ? s : { ...s, status: "error", error: error instanceof Error ? error.message : MESSAGES.generic },
       );
-      return undefined;
+      return { ok: false };
     }
   }, []);
 
@@ -112,6 +114,32 @@ export function useTxFlow(): TxFlow {
   const close = useCallback(() => setState((s) => ({ ...s, open: false })), []);
 
   return { ...state, run, retry, close };
+}
+
+export interface TxConfig {
+  title: string;
+  description?: string;
+  steps: TxStepConfig[];
+  successAction?: ReactNode;
+  failureAction?: (error: string) => ReactNode;
+}
+
+/** One stepper per screen: start(config, action) opens it for whichever action the user picked. */
+export function useTxRunner() {
+  const flow = useTxFlow();
+  const [config, setConfig] = useState<TxConfig | null>(null);
+  const { run } = flow;
+
+  const start = useCallback(
+    <T,>(next: TxConfig, action: (onStep: OnStep) => Promise<T>) => {
+      setConfig(next);
+      return run(action);
+    },
+    [run],
+  );
+
+  const stepper = config ? <TxStepper flow={flow} {...config} /> : null;
+  return { start, stepper, flow };
 }
 
 type StepState = "waiting" | "active" | "done" | "failed" | "skipped";
@@ -149,85 +177,99 @@ export function TxStepper({
   description,
   steps,
   successAction,
+  failureAction,
 }: {
   flow: TxFlow;
   title: string;
   description?: string;
   steps: TxStepConfig[];
   successAction?: ReactNode; // e.g. [View invoice]
+  failureAction?: (error: string) => ReactNode; // replaces [Try again] when it returns something
 }) {
   const running = flow.status === "running";
   const neutral = !!flow.error && isNeutralError(flow.error);
   const states = stepStates(flow, steps);
+  const customFailure = flow.error ? failureAction?.(flow.error) : null;
 
   return (
-    <Sheet open={flow.open} onOpenChange={(open) => !open && !running && flow.close()}>
-      <SheetContent showCloseButton={!running} className="w-full sm:max-w-md">
-        <SheetHeader>
-          <SheetTitle className="text-lg font-bold">{title}</SheetTitle>
-          {description && <SheetDescription>{description}</SheetDescription>}
-        </SheetHeader>
-
-        <ol className="flex flex-col gap-4 px-4" aria-live="polite">
-          {steps.map((step, i) => (
-            <li key={step.id} className="flex items-start gap-3" data-state={states[i]}>
-              <StepIcon state={states[i]} neutral={neutral} />
-              <div className="flex flex-col gap-0.5">
-                <span
-                  className={cn(
-                    "text-sm",
-                    states[i] === "waiting" || states[i] === "skipped" ? "text-ink-muted" : "font-medium text-ink",
-                  )}
-                >
-                  {step.label}
-                </span>
-                {states[i] === "skipped" && <span className="text-xs text-ink-muted">Not needed</span>}
-                {states[i] === "active" && flow.slow && SLOW_NOTES[step.id] && (
-                  <span className="text-xs text-warning-foreground">{SLOW_NOTES[step.id]}</span>
-                )}
-              </div>
-            </li>
-          ))}
-        </ol>
-
-        {flow.error && (
-          <p
-            role="alert"
-            className={cn(
-              "mx-4 rounded-lg px-3 py-2.5 text-sm",
-              neutral ? "bg-muted text-ink" : "bg-danger/10 text-danger",
-            )}
-          >
-            {flow.error}
-          </p>
-        )}
-
-        {flow.hash && (
-          <a
-            href={etherscanTxUrl(flow.hash)}
-            target="_blank"
-            rel="noreferrer"
-            className="mx-4 inline-flex w-fit items-center gap-1.5 text-sm font-medium text-brand-700 underline-offset-4 hover:underline"
-          >
-            View on Etherscan
-            <ExternalLinkIcon className="size-3.5" />
-          </a>
-        )}
-
-        {!running && (
-          <SheetFooter>
-            {flow.status === "error" && (
-              <Button size="lg" className="h-11" onClick={flow.retry}>
-                Try again
-              </Button>
-            )}
+    <ActionSheet
+      open={flow.open}
+      onOpenChange={(open) => !open && flow.close()}
+      dismissible={!running}
+      title={title}
+      description={description}
+      footer={
+        !running && (
+          <>
+            {flow.status === "error" &&
+              (customFailure ?? (
+                <Button size="lg" className="h-11" onClick={flow.retry}>
+                  Try again
+                </Button>
+              ))}
             {flow.status === "success" && successAction}
             <Button size="lg" variant="outline" className="h-11" onClick={flow.close}>
               {flow.status === "success" ? "Done" : "Close"}
             </Button>
-          </SheetFooter>
-        )}
-      </SheetContent>
-    </Sheet>
+          </>
+        )
+      }
+    >
+      <ol className="flex flex-col gap-4" aria-live="polite">
+        {steps.map((step, i) => {
+          const state = states[i];
+          const finale = step.id === "success" && state === "done";
+          return (
+            <li key={step.id} className="flex items-start gap-3" data-state={state}>
+              <span
+                className={cn(
+                  "flex",
+                  finale && "animate-in duration-300 ease-(--ease-out) fade-in-0 zoom-in-75 motion-reduce:zoom-in-100",
+                )}
+              >
+                <StepIcon state={state} neutral={neutral} />
+              </span>
+              <div className="flex flex-col gap-0.5">
+                <span
+                  data-step-label
+                  className={cn(
+                    "text-sm",
+                    state === "waiting" || state === "skipped" ? "text-ink-muted" : "font-medium text-ink",
+                    finale && "text-base font-bold text-brand-900",
+                  )}
+                >
+                  {step.label}
+                </span>
+                {state === "skipped" && <span className="text-xs text-ink-muted">Not needed</span>}
+                {state === "active" && flow.slow && SLOW_NOTES[step.id] && (
+                  <span className="text-xs text-warning-foreground">{SLOW_NOTES[step.id]}</span>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+
+      {flow.error && (
+        <p
+          role="alert"
+          className={cn("rounded-lg px-3 py-2.5 text-sm", neutral ? "bg-muted text-ink" : "bg-danger/10 text-danger")}
+        >
+          {flow.error}
+        </p>
+      )}
+
+      {flow.hash && (
+        <a
+          href={etherscanTxUrl(flow.hash)}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-brand-700 underline-offset-4 hover:underline"
+        >
+          View on Etherscan
+          <ExternalLinkIcon className="size-3.5" />
+        </a>
+      )}
+    </ActionSheet>
   );
 }

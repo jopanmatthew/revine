@@ -6,3 +6,4 @@ export { useCreditBadge, type CreditBadgeResult } from "./use-credit-badge";
 export { useBalances, type BalancesResult } from "./use-balances";
 export { useInvoiceDetails, type InvoiceDetailsResult } from "./use-invoice-details";
 export { useRevineActions, type RevineActions } from "./use-revine-actions";
+export { useProfileAds, type ProfileAdsResult } from "./use-profile-ads";

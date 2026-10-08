@@ -22,3 +22,6 @@ export const FAUCET_AMOUNT = 100_000_000n;
 export function etherscanTxUrl(hash: string): string {
   return `${ETHERSCAN_URL}/tx/${hash}`;
 }
+
+/** Repo link for the landing footer (§9.2). Hidden until the public repo exists. */
+export const GITHUB_URL: string | null = null; // TODO: set when the repo is public
