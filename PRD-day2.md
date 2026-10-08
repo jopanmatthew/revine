@@ -55,9 +55,9 @@ This is the plan for day 2. It sits next to `PRD.md`, which stays the source of 
 
 ### 1.3 Repo state (important)
 
-- Local only, at `~/revine`. **No git remote yet.**
-- Branch `frontend-foundation`: one commit (`f362c44`) plus a large **uncommitted** day-1 diff.
-- `.impeccable/review/` holds about 4 MB of screenshots: gitignore it before the first push.
+- On GitHub: **https://github.com/TimTam32123/revine** (private). Default branch `main` has all of day 1 (`2cc8629`). `frontend-foundation` is the same snapshot and can be deleted.
+- Teammates need to be added as collaborators (repo Settings → Collaborators) before they can clone it.
+- `.impeccable/review/` (about 4 MB of screenshots) is gitignored.
 - `DESIGN.md` describes the old (pre-redesign) look and is stale. `PRODUCT.md` is current.
 
 ### 1.4 Run it
@@ -122,9 +122,11 @@ Each task lists its PRD section, files and acceptance check. Tick the boxes in t
 
 ### 4.1 Repo and hygiene (everyone, first 30 minutes)
 
-- [ ] Add `.impeccable/review/` to `.gitignore`.
+- [x] Add `.impeccable/review/` to `.gitignore`.
 - [ ] Decide `DESIGN.md`: regenerate it from the current code, or delete it (it describes the old look).
-- [ ] Commit the day-1 work on `frontend-foundation`, create the GitHub repo, push, open a PR to `main`, merge once the build passes.
+- [x] Commit the day-1 work and push it to GitHub (`main`, private).
+- [ ] Add teammates as collaborators; everyone clones: `git clone https://github.com/TimTam32123/revine.git`.
+- [ ] From now on: one branch per workstream (`contracts`, `wallet-hooks`, `api-details`, `zk-credit`…), PR into `main`, merge when `npm run build` passes.
 - [ ] Add `.cursor/rules/revine.mdc` from Appendix A.
 - [ ] Before making the repo public: read `apps/web/src/fonts/Satoshi-LICENSE.txt` (self-hosted font files in a public repo), then set `GITHUB_URL` in `src/lib/config.ts`.
 - [ ] Everyone pulls and runs `npm install && npm run dev` once.
