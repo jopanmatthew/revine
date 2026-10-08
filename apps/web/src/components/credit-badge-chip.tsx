@@ -1,0 +1,53 @@
+"use client";
+
+import { ShieldCheckIcon } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { BADGE_VALIDITY_SECONDS } from "@/lib/config";
+import { useCreditBadge } from "@/lib/hooks";
+import { formatDate, formatJuta } from "@/lib/format";
+import type { Address } from "@/lib/types";
+import { cn } from "@/lib/utils";
+
+/**
+ * A seller's ZK credit badge (PRD §9.7, P1): "✓ Revenue above Rp100 jt". Financiers see the tier,
+ * never the revenue. Without a valid badge it shows "No credit badge" (or nothing, with hideIfNone).
+ */
+export function CreditBadgeChip({
+  address,
+  hideIfNone = false,
+  className,
+}: {
+  address?: Address;
+  hideIfNone?: boolean;
+  className?: string;
+}) {
+  const { badge, isLoading } = useCreditBadge(address);
+
+  if (isLoading) return <Skeleton className={cn("h-5 w-36 rounded-4xl", className)} />;
+
+  if (!badge?.isValid) {
+    if (hideIfNone) return null;
+    return (
+      <Badge variant="outline" className={cn("text-ink-muted", className)}>
+        No credit badge
+      </Badge>
+    );
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge className={cn("border-brand-700/20 bg-brand-700/10 text-brand-700", className)} tabIndex={0}>
+          <ShieldCheckIcon data-icon="inline-start" />
+          Revenue above {formatJuta(badge.threshold)}
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent>
+        Last 6 months · ZK-verified · valid until {formatDate(badge.attestedAt + BADGE_VALIDITY_SECONDS)}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
