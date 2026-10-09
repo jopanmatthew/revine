@@ -6,6 +6,7 @@ import { TestnetStrip } from "@/components/testnet-strip";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { satoshi } from "@/fonts/satoshi";
+import { Providers } from "./providers";
 
 import "./globals.css";
 
@@ -27,13 +28,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${satoshi.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        <TooltipProvider>
-          <TestnetStrip />
-          <SiteHeader />
-          <NetworkBanner />
-          <main className="flex flex-1 flex-col">{children}</main>
-          <Toaster />
-        </TooltipProvider>
+        <Providers>
+          <TooltipProvider>
+            <TestnetStrip />
+            <SiteHeader />
+            <NetworkBanner />
+            <main className="flex flex-1 flex-col">{children}</main>
+            <Toaster />
+          </TooltipProvider>
+        </Providers>
       </body>
     </html>
   );

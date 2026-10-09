@@ -5,7 +5,7 @@ import { ShieldCheckIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { BADGE_VALIDITY_SECONDS } from "@/lib/config";
+import { BADGE_VALIDITY_SECONDS, USE_MOCKS, ZK_PROOFS_ENABLED } from "@/lib/config";
 import { useCreditBadge } from "@/lib/hooks";
 import { formatDate, formatJuta } from "@/lib/format";
 import type { Address } from "@/lib/types";
@@ -53,11 +53,15 @@ export function CreditBadgeChip({
           tabIndex={0}
         >
           <ShieldCheckIcon data-icon="inline-start" />
-          Revenue above {formatJuta(badge.threshold)}
+          {USE_MOCKS ? "Demo · " : !ZK_PROOFS_ENABLED ? "Test verifier · " : ""}Revenue above {formatJuta(badge.threshold)}
         </Badge>
       </TooltipTrigger>
       <TooltipContent>
-        Last 6 months · ZK-verified · valid until {formatDate(badge.attestedAt + BADGE_VALIDITY_SECONDS)}
+        {USE_MOCKS
+          ? "Simulated demo badge; no proof has been verified on-chain."
+          : ZK_PROOFS_ENABLED
+            ? `Last 6 months · ZK-verified · valid until ${formatDate(badge.attestedAt + BADGE_VALIDITY_SECONDS)}`
+            : "Test-only verifier; this badge is not backed by a ZK proof."}
       </TooltipContent>
     </Tooltip>
   );

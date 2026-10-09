@@ -21,15 +21,51 @@ import { shortAddress } from "@/lib/format";
 import { useWallet } from "@/lib/hooks";
 import { useMockState } from "@/lib/hooks/use-mock-state";
 import { MOCK_ACCOUNTS, mockStore, type MockAccountKey } from "@/lib/mock";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 /** Connect button. In mock mode it switches between the demo accounts instead. */
 export function WalletButton({ className }: { className?: string }) {
-  return USE_MOCKS ? <MockWalletButton className={className} /> : <ChainWalletButton />;
+  return USE_MOCKS ? <MockWalletButton className={className} /> : <ChainWalletButton className={className} />;
 }
 
-// TODO(Jovan): RainbowKit <ConnectButton />.
-function ChainWalletButton() {
-  return null;
+function ChainWalletButton({ className }: { className?: string }) {
+  return (
+    <ConnectButton.Custom>
+      {({ account, chain, mounted, openAccountModal, openChainModal, openConnectModal }) => {
+        if (!mounted) return <Skeleton className="h-9 w-24 rounded-full bg-white/10" />;
+
+        if (!account || !chain) {
+          return (
+            <Button
+              className={className ?? "h-9 rounded-full bg-mint px-4 text-brand-900 hover:bg-white"}
+              onClick={openConnectModal}
+            >
+              <WalletIcon data-icon="inline-start" />
+              Connect wallet
+            </Button>
+          );
+        }
+
+        const name = demoName(account.address);
+        const label = name ?? shortAddress(account.address);
+        const onClick = chain.unsupported ? openChainModal : openAccountModal;
+
+        return (
+          <Button
+            variant="outline"
+            className={className ?? "h-9 gap-1.5 rounded-full border-white/15 bg-white/[0.06] px-1.5 sm:px-3 text-white hover:bg-white/[0.12] hover:text-white focus-visible:border-white/30 focus-visible:ring-mint/40 aria-expanded:bg-white/[0.12] aria-expanded:text-white"}
+            onClick={onClick}
+          >
+            <span className="flex size-6 items-center justify-center rounded-full bg-mint text-[0.65rem] font-bold text-brand-900">
+              {name ? initials(name) : <WalletIcon className="size-3.5" />}
+            </span>
+            <span className="max-sm:sr-only">{label}</span>
+            {chain.unsupported ? <span className="text-xs text-amber-300">Wrong network</span> : <ChevronDownIcon className="text-white/55" />}
+          </Button>
+        );
+      }}
+    </ConnectButton.Custom>
+  );
 }
 
 /** "Beras Bu Sari" → "BS". */

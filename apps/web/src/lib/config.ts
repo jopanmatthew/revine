@@ -4,6 +4,9 @@
 export const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
 export const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
+/** Enable only after matching circuit verifiers are deployed and configured. */
+export const ZK_PROOFS_ENABLED = process.env.NEXT_PUBLIC_ZK_PROOFS_ENABLED === "true";
+
 export const SEPOLIA_CHAIN_ID = 11155111;
 export const CHAIN_ID = Number(process.env.NEXT_PUBLIC_CHAIN_ID ?? SEPOLIA_CHAIN_ID);
 

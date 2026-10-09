@@ -1,0 +1,6 @@
+[package]
+name = "invoice"
+type = "bin"
+authors = [""]
+
+[dependencies]

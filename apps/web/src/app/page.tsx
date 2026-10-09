@@ -47,7 +47,8 @@ export default function LandingPage() {
             className="mt-6 max-w-2xl text-lg text-pretty text-white/75 sm:text-xl"
           >
             revine. helps Indonesian SMEs sell unpaid invoices to financiers and receive cash now. Ownership and
-            payments are tracked on Ethereum. Your business details stay private with zero-knowledge proofs.
+            payments are tracked on Ethereum. Your line items stay off-chain, and a fingerprint lets the buyer check
+            the private details against the public invoice record.
           </p>
           <div data-hero-in style={{ "--i": 3 } as CSSProperties} className="mt-9 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg" className="h-12 rounded-full bg-mint px-7 text-base text-brand-900 hover:bg-white">
@@ -135,8 +136,8 @@ export default function LandingPage() {
               Private by design.
             </h2>
             <p className="text-lg text-pretty text-ink-muted">
-              Line items, prices and your revenue never go on-chain. Zero-knowledge proofs show they&apos;re valid
-              without revealing them.
+              Line items and descriptions stay off-chain. The buyer checks them against a fingerprint on the public
+              invoice record; the private details themselves are never published.
             </p>
             <div className="grid gap-6 pt-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
               <ListOf

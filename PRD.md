@@ -563,6 +563,8 @@ Use these strings exactly. Each error says what happened and what to do next. Wa
 | Proof rejected on-chain | The network rejected the privacy proof. Please create it again. | [Try again] |
 | Details missing (buyer view) | The seller's private details haven't arrived yet. Ask the seller to open the invoice and upload them again. | — |
 | Details missing (seller view, local copy exists) | Your private details didn't upload. | [Upload again] |
+| Supabase table missing | Private invoice storage isn't set up. Run the Supabase migration, then try again. | Apply `supabase/migrations/202610090001_invoice_details.sql` |
+| Supabase server key rejected | Private invoice storage credentials were rejected. Check the server-only Supabase key. | Update the server environment and restart |
 | Fingerprint mismatch | ⚠ These details don't match the on-chain record. Don't confirm — contact the seller. | Confirm disabled |
 | Someone other than seller or buyer asks for details | Only the seller and buyer can see these details. | — |
 
@@ -1182,6 +1184,9 @@ Setup: one laptop, three browser profiles side by side: Beras Bu Sari (seller), 
 | 9 Oct 2026 | Seller, buyer, financier and every other screen use the landing's look; the header turns `brand-900` with the dark logo | Owner request; one visual language from the landing into the app |
 | 9 Oct 2026 | List rows open their invoice when tapped; only real actions get a button (no [View]) | Fewer buttons per row and a bigger touch target |
 | 9 Oct 2026 | Features added during the build (buyer payment record, Companies tab, profile ads, landing calculator) are in scope as listed in §6.1 | They were built on owner request and read data the contracts already store, so they add no contract or API work |
+| 9 Oct 2026 | Pin the proof toolchain: Nargo 1.0.0-rc.4, `@noir-lang/noir_js` 1.0.0-rc.4-5a3abf2.nightly, and `@aztec/bb.js` 5.3.0-nightly.20261009 | Keep the circuit artifacts, browser prover, and Solidity verifiers compatible |
+| 9 Oct 2026 | Credit proof uses synthetic Demo Bank attestations; invoice and credit verifiers are generated locally, while proof mode stays off until the matching contracts are deployed | Keep demo evidence and undeployed contracts clearly distinguished from live financial data |
+| 9 Oct 2026 | Public Vercel deployment is held until the owner requests it | Finish local Sepolia and proof readiness without publishing the app |
 
 ## 23. Changelog
 
@@ -1194,6 +1199,7 @@ Setup: one laptop, three browser profiles side by side: Beras Bu Sari (seller), 
 | v26.0 | 9 Oct 2026 | §9.2: landing redesign (Pluang-inspired): centered hero with a coded product stage, calculator example card, tabbed How it works, roles as "one invoice, three views", footer CTA |
 | v26.0 | 9 Oct 2026 | §9.1, §10.1: app screens follow the landing's look (dark header and cover band, overlapping white sheets, pill buttons and tabs) |
 | v26.0 | 9 Oct 2026 | End-of-day-1 cleanup so the PRD matches the build: §4 extra mock cast; §6.1 features added during the build; §6.2 profile ads note; §9.0 Companies tab; §9.3 role cards; §9.4, §9.8, §9.9, §9.10 cover bands, pill tabs and tap-to-open rows (no [View]); §12.3 repo structure; §16.3 mock data and account menu; §18.3 unit tests; §19 demo beats; pointer to `PRD-day2.md` |
+| v26.0 | 9 Oct 2026 | Implemented real MetaMask/Sepolia hooks, private invoice-details API, local credit and invoice proof pipelines, generated Solidity verifiers, and proof integration fixtures; fixed the production build. Updated `PRD-day2.md` with the remaining external gates. |
 
 When something changes: update the relevant section, add a row to §22 if it's a decision, add a row here, then sync Appendix A if a rule changed.
 

@@ -3,5 +3,22 @@
 
 # Foundry secrets (PRD §12.4); never commit
 contracts/.env
+/contracts/lib/
+/contracts/cache/
+/contracts/out/
+/contracts/broadcast/
+/.tools/
+/circuits/*/target/
+
+# Local environment secrets; keep checked-in .env.example templates
+.env
+.env.*
+!.env.example
+
+# Local app/build state
+.vercel/
+**/node_modules/
+**/.next/
+*.tsbuildinfo
 
 .DS_Store

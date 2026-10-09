@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { WalletGate } from "@/components/wallet-gate";
-import { DEMO_MODE } from "@/lib/config";
+import { DEMO_MODE, ZK_PROOFS_ENABLED } from "@/lib/config";
 import { demoName, displayName, sameAddress } from "@/lib/demo-names";
 import { daysToDue, dueDateInDays, formatDate, nowSeconds, toDueDateSeconds, toWibDateString } from "@/lib/format";
 import { useRevineActions, useWallet } from "@/lib/hooks";
@@ -167,9 +167,15 @@ function CreateInvoiceForm() {
     const result = await start(
       {
         title: "Create invoice",
-        steps: txSteps(["verify-wallet", "saving-details", "wallet", "pending", "success"], {
-          success: "Invoice created ✓",
-        }),
+        steps: txSteps(
+          ZK_PROOFS_ENABLED
+            ? ["verify-wallet", "proving", "saving-details", "wallet", "pending", "success"]
+            : ["verify-wallet", "saving-details", "wallet", "pending", "success"],
+          {
+            proving: "Create privacy proof in this browser",
+            success: "Invoice created ✓",
+          },
+        ),
       },
       (onStep) => actions.createInvoice(input, onStep),
     );

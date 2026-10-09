@@ -1,6 +1,6 @@
 # revine. — Day 2 PRD
 
-**For:** 10 Oct 2026 · **Release:** v26.0 · **Network:** Ethereum Sepolia · **Event:** ETHJKT
+**Release:** v26.0 · **Network:** Ethereum Sepolia · **Event:** ETHJKT
 
 This is the plan for day 2. It sits next to `PRD.md`, which stays the source of truth for *what* we build (screens, contracts, circuits, copy). This file says *what's left, who does it, in what order, and how we know it's done*. If the two disagree, PRD.md wins: stop, ask, and fix PRD.md §22–23 first (CLAUDE.md rule).
 
@@ -31,27 +31,33 @@ This is the plan for day 2. It sits next to `PRD.md`, which stays the source of 
 | **Landing (§9.2)** | Redesigned, Pluang-inspired: centered hero with a coded product stage (financier buys invoice #12, the seller's phone shows "You got paid Rp9.700.000 🎉"), example calculator, tabbed How it works, "one invoice, three views", privacy redaction, footer CTA. |
 | **App look (§9.1)** | Dark `brand-900` header that runs into each screen's cover band; pill buttons and tabs; white sheets that overlap the band; floating action sheets. |
 | **Extras added on day 1** | Buyer payment record (§7, §9.9, §9.10), Companies tab with closed-invoice records and labelled profile ads (§7, §9.9, mock-only), landing calculator. All in PRD §6.1 now. |
-| **Shared plumbing** | `types.ts` (§16.1), hook signatures (§16.2) with mock implementations, `mock.ts` + simulated contract (`mock-actions.ts`), TxStepper, friendly errors (§11), format helpers, demo names, `.env.example`. |
-| **Quality** | `tsc`, `eslint`, 15 unit tests (`npm test`) and `npm run build` pass. Checked at 375px and 1024px. |
+| **Contracts** | `MockIDR`, `RevineInvoice`, `AlwaysTrueVerifier`, deploy script, and 21 original Foundry tests are present. Sepolia's latest `RevineInvoice` is `0x70ac14f38dac3a56d87ec18b604c61cb9471a59d` and still uses the placeholder verifier. Two generated real verifiers and four verifier integration tests are now present locally. |
+| **Real P0 frontend plumbing** | Wagmi/RainbowKit provider, chain hooks, wallet verification, private `/api/details`, Supabase migration, MetaMask wallet connect, and configurable contract addresses are present. |
+| **Local proof implementation** | Credit and invoice Noir circuits, browser prover, matching invoice circuit commitment, generated EVM verifier sources, and proof fixtures are implemented. Credit attestations use synthetic demo revenue only. Real verifiers have not been deployed. |
+| **Quality checks (9 Oct)** | `npm test`: 5 files passed; invoice Noir tests: 2 passed; credit Noir tests: 18 passed; `forge test`: 25 passed; `npm run lint`: passed; `npx tsc --noEmit`: passed; `NEXT_PUBLIC_USE_MOCKS=false npm run build`: passed. |
 | **PRD** | PRD.md matches the build (end-of-day-1 cleanup, §23). |
 
-### 1.2 Not started
+### 1.2 Remaining or blocked
 
 | Area | Owner (PRD §17.1) | PRD |
 |---|---|---|
-| Contracts: `MockIDR`, `RevineInvoice`, verifiers, Foundry tests, deploy, Etherscan verification | Jovan | §13, §18.1 |
-| `src/lib/contracts.ts` (addresses + ABIs) | Jovan | §16.4 |
-| Wallet: wagmi + viem + RainbowKit + TanStack Query | Jovan | §12.2 |
-| Real hooks: every `TODO(Jovan)` in `src/lib/hooks/` | Jovan | §16.2 |
-| Supabase table + `/api/details` + wallet verification | Jovan | §15 |
-| `/api/attest` (mock attester) | Jovan | §15.2 |
-| `src/lib/fingerprint.ts` (light-mode fingerprint + `text_hash`) | open | §14.2 |
-| Noir circuits: credit (P1), invoice (P2) | open (§21: proposed Jovan) | §14 |
-| Browser prover `src/zk/prover.ts` | Frontend dev | §14, §12.5 |
-| Vercel deployment | Frontend dev | §12.2 |
-| Logo SVGs, favicon, apple icon, OG image (`public/brand/` is empty; the logo is a text stand-in) | Designer | §10.1 |
-| `README.md`, deck, demo video | Pitch lead | §17.1 |
+| M1 end-to-end Sepolia run | Jovan + frontend dev | §5, §18.3 |
+| Demo wallet funding | Jovan | §18.4 |
+| Etherscan source verification for the deployed contracts | Jovan | §5, §18.4 |
+| Deploy real credit verifier, new `RevineInvoice`, configure addresses, and run the browser proof flow (P1) | Jovan + frontend dev | §14.3, §15.2 |
+| Deploy real invoice verifier, configure addresses, and run the browser proof flow (P2) | Jovan + frontend dev | §14.2 |
+| Public Vercel deployment | Frontend dev | §12.2 (intentionally pending per user) |
+| Logo SVGs, favicon, apple icon, OG image (`public/brand/` is empty; logo remains a text stand-in) | Designer | §10.1 |
+| Demo video and hackathon submission package | Pitch lead | §17.1 |
 | `.cursor/rules/revine.mdc` (Appendix A) | anyone | App. A |
+
+The Supabase migration was applied in the SQL Editor; afterward, the local app
+logged successful `/api/details` writes and reads. Wallet funding and the
+seller → buyer → financier → buyer flow still need a live MetaMask run.
+The locally generated proof contracts are ready for MetaMask deployment; the
+checked-in Sepolia invoice contract still points to `AlwaysTrueVerifier`.
+Proof mode must remain disabled until the new contracts are deployed and their
+addresses configured. `/api/attest` uses synthetic demo revenue, not bank data.
 
 ### 1.3 Repo state (important)
 
@@ -68,7 +74,8 @@ npm install
 npm run dev        # http://localhost:3000, mock mode via .env.local
 npm test           # unit tests (node --test)
 npm run lint
-npm run build
+NEXT_PUBLIC_USE_MOCKS=false npm run build
+npx tsc --noEmit
 ```
 
 In mock mode, the account menu (top right) switches between Beras Bu Sari, RM Selera Kita, Modal Maju and an empty wallet. It also has "Reset demo data" and "Load worst-case data".
@@ -77,14 +84,17 @@ In mock mode, the account menu (top right) switches between Beras Bu Sari, RM Se
 
 ## 2. Goal for day 2
 
-**Ship v26.0 "done" (PRD §5) on the deployed Vercel URL.** In order:
+**Reach the M1–M3 acceptance criteria in PRD §5.** The immediate work is local
+Sepolia readiness and a manual MetaMask run. Per the current user instruction,
+do not deploy the public Vercel app yet; the public URL acceptance gate remains
+pending until separately authorized.
 
 | Milestone | What's true | PRD |
 |---|---|---|
 | **M1 — core flow on Sepolia** | Three wallets in three browser profiles run create → confirm → list → buy → repay on the Vercel URL with real contracts. Balances end exactly right: seller +Rp9.700.000, financier −Rp9.700.000 then +Rp10.000.000, buyer −Rp10.000.000. Every action shows wallet → pending → success or a §11 error, with an Etherscan link. | §5.1–5.2, §6.1 P0 |
 | **M2 — credit badge (P1)** | The seller proves "revenue above Rp100 jt" in the browser; `submitCreditProof` verifies on-chain; the badge shows on the marketplace and invoice page; nobody sees the number. | §5.6, §14.3 |
 | **M3 — invoice proof (P2)** | The invoice proof verifies on-chain at creation; the buyer's review shows "Details match the on-chain fingerprint ✓" from `noir.execute`. | §5.7, §14.2 |
-| **Ship** | Contracts verified on Etherscan, mocks off on Vercel, brand assets in, README + demo video ready, submission sent. | §5.5, §5.9–5.10, §18.4 |
+| **Ship** | Contracts verified on Etherscan, production deployment, brand assets, README + demo video, submission. Public app deployment remains held. | §5.5, §5.9–5.10, §18.4 |
 
 P3 (§6.1) only if M1–M3 are done. Nothing from §6.2.
 
@@ -149,9 +159,9 @@ Each task lists its PRD section, files and acceptance check. Tick the boxes in t
 
 Install: `wagmi`, `viem`, `@rainbow-me/rainbowkit`, `@tanstack/react-query`.
 
-- [ ] A client `Providers` component (wagmi config for Sepolia with `NEXT_PUBLIC_RPC_URL`, RainbowKit, QueryClient) wrapping the app in `src/app/layout.tsx`.
-- [ ] `WalletButton` (`src/components/wallet-button.tsx`): use RainbowKit's `ConnectButton.Custom` so it keeps the dark-header pill look (same classes as the mock button). Keep the mock button for `USE_MOCKS=true`.
-- [ ] Replace each `TODO(Jovan)` with the real version. The mock and real versions sit in the same file and switch on `USE_MOCKS`:
+- [x] A client `Providers` component (wagmi config for Sepolia with `NEXT_PUBLIC_RPC_URL`, RainbowKit, QueryClient) wraps the app in `src/app/layout.tsx`.
+- [x] `WalletButton` uses RainbowKit's connect UI and retains the mock button for `USE_MOCKS=true`.
+- [x] Real chain hooks are implemented beside the mock versions:
 
 | Hook | File | Real version |
 |---|---|---|
@@ -163,15 +173,15 @@ Install: `wagmi`, `viem`, `@rainbow-me/rainbowkit`, `@tanstack/react-query`.
 | `useRevineActions` | `use-revine-actions.ts` | `writeContract` + `waitForTransactionReceipt`; approval only when allowance is short; read the new id from `InvoiceCreated`; map custom errors to §11 messages |
 | `useProfileAds` | `use-profile-ads.ts` | stays empty in real mode for v26.0 (ads are off-chain and mock-only) |
 
-**Done when:** with `NEXT_PUBLIC_USE_MOCKS=false`, every screen works against Sepolia **without changing any component** (§16.3).
+**Done when:** with `NEXT_PUBLIC_USE_MOCKS=false`, every screen works against Sepolia **without changing any component** (§16.3). Manual confirmation is still pending on funded wallets and the configured Supabase table.
 
 ### 4.4 Off-chain data and fingerprint — PRD §14.2, §15
 
-- [ ] Supabase table `invoice_details` (§15.1). RLS **on**, **no policies**. The service-role key is server-only.
-- [ ] `POST /api/details` and `GET /api/details?commitment=0x…` with the checks in §15.2.
-- [ ] Wallet verification message and checks exactly as §15.3 (viem `verifyMessage`; ≤ 24 h old; ≤ 5 min in the future). The client keeps `{ message, signature }` per address in session storage.
-- [ ] `src/lib/fingerprint.ts`: `textHash({ description, itemNames })` = first 31 bytes of SHA-256 of `JSON.stringify` with that key order; light-mode `fingerprint(...)` = `keccak256(abi.encode(seller, buyer, faceAmount, dueDate, qty[5], unitPrice[5], textHash, salt))`. Unit tests: the same input gives the same hash for seller and buyer; any change gives a different one.
-- [ ] `createInvoice` real flow: `verify-wallet` → (`proving` in P2) → `saving-details` (POST) → `wallet` → `pending` → `success`.
+- [x] Apply the Supabase table migration `invoice_details` (§15.1). RLS **on**, **no policies**. The service-role key is server-only.
+- [x] `POST /api/details` and `GET /api/details?commitment=0x…` implement the checks in §15.2.
+- [x] Wallet verification uses the §15.3 message and age checks; the client keeps `{ message, signature }` per address in session storage.
+- [x] `src/lib/fingerprint.ts` has the light-mode ABI fingerprint and the matching circuit commitment; unit tests cover stable and changing inputs.
+- [x] `createInvoice` real flow includes wallet verification, optional proving, private details save, and transaction steps.
 
 **Done when:** the buyer opens a real invoice, signs once, sees the line items, and sees "Details match the on-chain fingerprint ✓"; a third wallet sees only the locked message.
 
@@ -184,22 +194,24 @@ Install: `wagmi`, `viem`, `@rainbow-me/rainbowkit`, `@tanstack/react-query`.
 
 ### 4.6 ZK credit badge, P1 (circuit: owner from §8; prover: frontend dev) — PRD §14.3, §9.7
 
-- [ ] Pin nargo, bb, `@noir-lang/noir_js`, `@aztec/bb.js` to compatible versions and write them in PRD §22.
-- [ ] `/api/attest`: `DEMO_REVENUE` map (demo seller → 180.000.000, others → 120.000.000); signs the **raw 32-byte digest**, 64-byte r‖s, low-s (§12.5 #11).
-- [ ] `circuits/credit`: constraints in §14.3, plus one `nargo test` using a signature produced by the real `/api/attest` code.
-- [ ] `CreditVerifier.sol` from bb with the keccak/EVM option; redeploy `RevineInvoice`; update `contracts.ts`.
-- [ ] `src/zk/prover.ts`: client-only dynamic import; EVM-compatible proofs.
-- [ ] `getAttestation` + `publishCreditBadge` in `useRevineActions`. The credit page UI already exists (`/seller/credit`).
+- [x] Pin `nargo` 1.0.0-rc.4 in `circuits/NARGO_VERSION`, `@noir-lang/noir_js` and `@aztec/bb.js` in `apps/web/package.json`.
+- [x] `/api/attest`: synthetic demo revenue map; signs the raw 32-byte digest and returns normalized 64-byte r‖s.
+- [x] `circuits/credit`: checks revenue threshold and the attester signature; credit circuit tests pass (18).
+- [x] Generate `CreditVerifier.sol` for the EVM target and keep a valid proof fixture for local Solidity tests.
+- [x] `src/lib/zk/prover.ts`: client-only imports, local proof verification, EVM-targeted proofs.
+- [x] `getAttestation` + `publishCreditBadge` are wired in `useRevineActions` and the credit page.
+- [ ] Deploy both real verifiers and a new `RevineInvoice` with MetaMask; configure its address; run the credit proof in the real app.
 
 **Done when:** the demo seller publishes "Revenue above Rp100 jt" from the Vercel URL, it shows on marketplace cards and the invoice page, and Etherscan shows the `CreditVerified` event.
 
 ### 4.7 ZK invoice proof, P2 — PRD §14.2
 
-- [ ] `circuits/invoice` with the constraints in §14.2 and the `nargo test` cases in §18.2.
-- [ ] `InvoiceVerifier.sol`; redeploy; update `contracts.ts`.
-- [ ] Seller: proof generated on create (`proving` step), passed to `createInvoice`.
-- [ ] Buyer: `noir.execute(...)` (witness only) and compare with the on-chain commitment; a failure counts as a mismatch.
-- [ ] Invoice page: "Invoice proof" fact says "Verified on-chain at creation ✓" (§9.10).
+- [x] `circuits/invoice` enforces the public invoice fields, itemized arithmetic, and Pedersen commitment; circuit tests pass (2).
+- [x] `InvoiceVerifier.sol` generated for the EVM target; its proof fixture passes local Solidity integration tests.
+- [x] Seller proof generation is wired into invoice creation behind the proof-mode flag.
+- [x] Buyer uses `noir.execute(...)` to recompute the private commitment and compare it with the on-chain commitment.
+- [x] Invoice page copy is wired for proof mode.
+- [ ] Deploy the real verifiers and replacement `RevineInvoice` with MetaMask; enable proof mode and confirm the complete browser flow on Sepolia.
 
 ### 4.8 Brand assets (designer) — PRD §10.1
 

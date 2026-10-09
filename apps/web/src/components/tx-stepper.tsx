@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 
 import { ActionSheet } from "@/components/action-sheet";
 import { Button } from "@/components/ui/button";
-import { etherscanTxUrl } from "@/lib/config";
+import { etherscanTxUrl, USE_MOCKS } from "@/lib/config";
 import { isNeutralError, MESSAGES } from "@/lib/messages";
 import type { OnStep, TxStep } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -259,7 +259,11 @@ export function TxStepper({
         </p>
       )}
 
-      {flow.hash && (
+      {flow.hash && USE_MOCKS && (
+        <p className="text-sm text-ink-muted">Simulated locally · no Sepolia transaction was sent.</p>
+      )}
+
+      {flow.hash && !USE_MOCKS && (
         <a
           href={etherscanTxUrl(flow.hash)}
           target="_blank"

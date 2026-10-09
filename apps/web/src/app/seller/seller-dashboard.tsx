@@ -19,6 +19,7 @@ import { WalletGate } from "@/components/wallet-gate";
 import { displayName, sameAddress } from "@/lib/demo-names";
 import { formatDate, formatDayMonth, formatRupiah, nowSeconds } from "@/lib/format";
 import { useCreditBadge, useInvoices, useWallet } from "@/lib/hooks";
+import { USE_MOCKS } from "@/lib/config";
 import { isFresh, isListingExpired, lastActivity, plural } from "@/lib/invoice";
 import { useRememberRole } from "@/lib/role";
 import type { Invoice, InvoiceStatus } from "@/lib/types";
@@ -168,7 +169,7 @@ function SellerInvoices() {
         badge={
           badge?.isValid ? (
             <CreditBadgeChip address={address} tone="dark" />
-          ) : (
+          ) : USE_MOCKS ? (
             badge && (
               <Link
                 href="/seller/credit"
@@ -178,7 +179,7 @@ function SellerInvoices() {
                 <ArrowRightIcon className="size-3.5" aria-hidden />
               </Link>
             )
-          )
+          ) : null
         }
         loading={isLoading}
         hero={{

@@ -1,6 +1,6 @@
 import { ShieldCheckIcon } from "lucide-react";
 
-import { BADGE_VALIDITY_SECONDS } from "@/lib/config";
+import { BADGE_VALIDITY_SECONDS, USE_MOCKS, ZK_PROOFS_ENABLED } from "@/lib/config";
 import { formatDate, formatJuta } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -26,14 +26,22 @@ export function BadgeCredential({
     >
       <div className="flex items-center gap-2 text-sm font-medium text-mint">
         <ShieldCheckIcon className="size-5" aria-hidden />
-        ZK-verified credit badge
+        {USE_MOCKS
+          ? "Simulated demo badge"
+          : ZK_PROOFS_ENABLED
+            ? "ZK-verified credit badge"
+            : "Test verifier badge"}
       </div>
       <div className="flex flex-col gap-1">
         <span className="text-[1.75rem] leading-tight font-bold tracking-tight sm:text-3xl">
           Revenue above {formatJuta(threshold)}
         </span>
         <span className="text-sm text-white/70">
-          last 6 months · ZK-verified · valid until {formatDate(attestedAt + BADGE_VALIDITY_SECONDS)}
+          {USE_MOCKS
+            ? "Demo data · not verified on-chain"
+            : ZK_PROOFS_ENABLED
+              ? `last 6 months · ZK-verified · valid until ${formatDate(attestedAt + BADGE_VALIDITY_SECONDS)}`
+              : "Test-only verifier · not verified by a ZK proof"}
         </span>
       </div>
     </div>

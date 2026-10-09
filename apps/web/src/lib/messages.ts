@@ -31,6 +31,10 @@ export const MESSAGES = {
   detailsMissingBuyer:
     "The seller's private details haven't arrived yet. Ask the seller to open the invoice and upload them again.",
   detailsMissingSeller: "Your private details didn't upload.",
+  detailsStorageSchemaMissing:
+    "Private invoice storage isn't set up. Run the Supabase migration, then try again.",
+  detailsStorageNotConfigured: "Private invoice storage isn't configured on the server.",
+  detailsStorageAuthFailed: "Private invoice storage credentials were rejected. Check the server-only Supabase key.",
   fingerprintMismatch: "⚠ These details don't match the on-chain record. Don't confirm — contact the seller.",
   detailsForbidden: "Only the seller and buyer can see these details.",
 
@@ -44,6 +48,19 @@ export const MESSAGES = {
   buyWrongStatus: "Someone else just financed this invoice.",
   generic: "Something went wrong and the action didn't go through.",
 } as const;
+
+export function detailsStorageErrorMessage(code: unknown): string | undefined {
+  switch (code) {
+    case "STORAGE_SCHEMA_MISSING":
+      return MESSAGES.detailsStorageSchemaMissing;
+    case "STORAGE_NOT_CONFIGURED":
+      return MESSAGES.detailsStorageNotConfigured;
+    case "STORAGE_AUTH_FAILED":
+      return MESSAGES.detailsStorageAuthFailed;
+    default:
+      return undefined;
+  }
+}
 
 export type ContractErrorName =
   | "NotBuyer"

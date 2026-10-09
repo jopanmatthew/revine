@@ -12,7 +12,7 @@ import { txSteps, useTxRunner } from "@/components/tx-stepper";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { WalletGate } from "@/components/wallet-gate";
-import { BADGE_VALIDITY_SECONDS } from "@/lib/config";
+import { BADGE_VALIDITY_SECONDS, USE_MOCKS } from "@/lib/config";
 import { formatDateTime, formatJuta, nowSeconds, SECONDS_PER_DAY } from "@/lib/format";
 import { useCreditBadge, useRevineActions, useWallet } from "@/lib/hooks";
 import { MESSAGES } from "@/lib/messages";
@@ -69,9 +69,9 @@ function CreditBadgeSteps() {
     }
     const result = await start(
       {
-        title: "Publish your credit badge",
+        title: USE_MOCKS ? "Simulate your credit badge" : "Publish your credit badge",
         steps: txSteps(["proving", "wallet", "pending", "success"], {
-          proving: "Create privacy proof (in this browser)",
+          proving: USE_MOCKS ? "Simulate demo badge" : "Create privacy proof (in this browser)",
         }),
       },
       (onStep) => actions.publishCreditBadge(chosen, attestation, onStep),
@@ -207,15 +207,16 @@ function CreditBadgeSteps() {
               )}
             </Step>
 
-            <Step n={3} title="Create proof & publish badge" done={false} disabled={!attestation} last>
+            <Step n={3} title={USE_MOCKS ? "Simulate demo badge" : "Create proof & publish badge"} done={false} disabled={!attestation} last>
               {attestation && chosen !== null && (
                 <div className="flex flex-col gap-3">
                   <p className="text-sm text-pretty text-ink-muted">
-                    Your browser creates a privacy proof that your revenue is above {formatJuta(chosen)}. Only the
-                    proof goes on-chain, never the number.
+                    {USE_MOCKS
+                      ? "This prototype simulates the bank and badge flow. It creates no cryptographic proof and sends no on-chain transaction."
+                      : `Your browser creates a privacy proof that your revenue is above ${formatJuta(chosen)}. Only the proof goes on-chain, never the number.`}
                   </p>
                   <Button className="h-12 w-full text-base sm:w-fit sm:px-6" disabled={isWrongNetwork} onClick={publish}>
-                    Create proof & publish badge
+                    {USE_MOCKS ? "Simulate demo badge" : "Create proof & publish badge"}
                   </Button>
                 </div>
               )}
@@ -274,7 +275,9 @@ function Result({ threshold, attestedAt }: { threshold: bigint; attestedAt: numb
         className="animate-in duration-300 ease-(--ease-out) fade-in-0 slide-in-from-bottom-2 motion-reduce:slide-in-from-bottom-0"
       />
       <p className="text-base text-pretty text-ink">
-        Financiers see this badge. Your exact revenue never goes on-chain.
+        {USE_MOCKS
+          ? "This sample badge is stored in the local demo only; no credit proof or on-chain badge was created."
+          : "Financiers see this badge. Your exact revenue never goes on-chain."}
       </p>
       <Button asChild size="lg" className="h-11 w-full sm:w-fit sm:px-5">
         <Link href="/seller">Back to dashboard</Link>

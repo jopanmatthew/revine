@@ -1,14 +1,17 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { useAccount, useSignMessage } from "wagmi";
 
+import { USE_MOCKS, ZK_PROOFS_ENABLED } from "@/lib/config";
 import { sameAddress } from "@/lib/demo-names";
-import { USE_MOCKS } from "@/lib/config";
-import { MESSAGES } from "@/lib/messages";
+import { detailsStorageErrorMessage, MESSAGES } from "@/lib/messages";
+import { fingerprint, invoiceCircuitFingerprint } from "@/lib/fingerprint";
 import { mockAccountAddress, mockStore } from "@/lib/mock";
 import type { InvoiceDetails } from "@/lib/types";
+import { encodeWalletVerification, getWalletVerification } from "@/lib/wallet-verification";
 
-import { NOT_WIRED } from "./not-wired";
+import { useInvoices } from "./use-invoices";
 
 export interface InvoiceDetailsResult {
   details: InvoiceDetails | null;
@@ -62,10 +65,63 @@ function useMockInvoiceDetails(commitment: `0x${string}`): InvoiceDetailsResult 
   return { ...state, load };
 }
 
-// TODO(Jovan): wallet verification (§15.3) → GET /api/details → fingerprint check (§14.2).
 function useChainInvoiceDetails(commitment: `0x${string}`): InvoiceDetailsResult {
-  void commitment;
-  return { ...IDLE, error: NOT_WIRED, load: async () => {} };
+  const account = useAccount();
+  const { signMessageAsync } = useSignMessage();
+  const { invoices } = useInvoices();
+  const [state, setState] = useState<DetailsState>(IDLE);
+
+  const load = useCallback(async () => {
+    setState({ ...IDLE, isLoading: true });
+    if (!account.address) {
+      setState({ ...IDLE, error: new Error(MESSAGES.notConnected) });
+      return;
+    }
+
+    try {
+      const verification = await getWalletVerification(account.address, (message) =>
+        signMessageAsync({ message }),
+      );
+      const response = await fetch(`/api/details?commitment=${encodeURIComponent(commitment)}`, {
+        headers: { "x-revine-auth": encodeWalletVerification(verification) },
+        cache: "no-store",
+      });
+
+      if (response.status === 403) throw new Error(MESSAGES.detailsForbidden);
+      if (response.status === 404) {
+        const invoice = invoices.find((item) => item.commitment.toLowerCase() === commitment.toLowerCase());
+        const message = sameAddress(account.address, invoice?.seller)
+          ? MESSAGES.detailsMissingSeller
+          : MESSAGES.detailsMissingBuyer;
+        throw new Error(message);
+      }
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { code?: unknown } | null;
+        throw new Error(detailsStorageErrorMessage(payload?.code) ?? MESSAGES.generic);
+      }
+
+      const details = (await response.json()) as InvoiceDetails;
+      const calculated = await (ZK_PROOFS_ENABLED ? invoiceCircuitFingerprint(details) : fingerprint(details));
+      setState({
+        details,
+        matches: calculated.toLowerCase() === commitment.toLowerCase(),
+        isLoading: false,
+        error: null,
+      });
+    } catch (error) {
+      const name = error instanceof Error ? error.name : "";
+      const code = error && typeof error === "object" ? (error as { code?: unknown }).code : undefined;
+      const message =
+        code === 4001 || name.includes("UserRejected")
+          ? MESSAGES.verificationDeclined
+          : error instanceof Error
+            ? error.message
+            : MESSAGES.generic;
+      setState({ ...IDLE, error: new Error(message) });
+    }
+  }, [account.address, commitment, invoices, signMessageAsync]);
+
+  return { ...state, load };
 }
 
 export const useInvoiceDetails: (commitment: `0x${string}`) => InvoiceDetailsResult = USE_MOCKS
