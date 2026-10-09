@@ -30,7 +30,7 @@ export function PageContainer({
 
 /** The landing's white sheet: large radius, hairline ring, a long soft shadow under it. */
 export const panelClass =
-  "overflow-hidden rounded-3xl bg-card ring-1 ring-foreground/[0.06] shadow-[0_28px_60px_-36px_rgb(11_31_26/0.35)]";
+  "overflow-hidden rounded-3xl bg-card ring-1 ring-foreground/[0.06] shadow-[0_24px_48px_-36px_rgb(11_31_26/0.26)]";
 
 export function Panel({ children, className }: { children: ReactNode; className?: string }) {
   return <section className={cn(panelClass, className)}>{children}</section>;
