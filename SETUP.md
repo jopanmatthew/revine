@@ -1,8 +1,8 @@
 # revine. setup and readiness
 
-This guide covers the local Sepolia demo. The public app is not deployed.
-MetaMask signs transactions in the browser; no wallet private key belongs in a
-file, terminal command, website, or chat.
+This guide covers the Sepolia demo. The public app is live at
+<https://revine-azure.vercel.app>. MetaMask signs transactions in the browser;
+no wallet private key belongs in a file, terminal command, website, or chat.
 
 ## Current state (9 Oct 2026)
 
@@ -15,7 +15,7 @@ file, terminal command, website, or chat.
 | Credit evidence | `/api/attest` signs synthetic Demo Bank revenue for this demo; it is not connected to a real bank. |
 | Sepolia | The current `RevineInvoice` still uses `AlwaysTrueVerifier`; proof mode must stay off until deploying the verifiers and a replacement invoice contract. |
 | End-to-end flow | The funded three-wallet MetaMask flow still needs to be run manually. |
-| Public site | Intentionally not deployed. |
+| Public site | Live on Vercel at <https://revine-azure.vercel.app>. |
 
 **Run order:** fund the wallets and finish the M1 flow
 against the current fingerprint-only Sepolia deployment first. Then deploy the
@@ -174,7 +174,13 @@ circuits.
 
 ## 7. Public deployment
 
-The Vercel deployment is intentionally deferred. Before deploying, use the
-updated source, configure the production Supabase and attester server secrets,
-set the final public contract addresses, keep mocks off, and verify the complete
-real-mode flow locally. Never add a wallet private key to Vercel or the app.
+The public Sepolia demo is live at <https://revine-azure.vercel.app>. Its
+production Vercel environment uses the current Supabase demo project and the
+server-only synthetic Demo Bank signer. Mocks are off and ZK proof mode is off.
+The current `RevineInvoice` still points to `AlwaysTrueVerifier`, so the
+deployment is a test demo and must not be used with real funds. The funded
+three-wallet flow still needs a manual run.
+
+To promote beyond this demo, deploy the real invoice and credit verifiers,
+configure the replacement invoice contract addresses, and verify the complete
+flow. Never add a wallet private key to Vercel or the app.

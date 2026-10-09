@@ -44,7 +44,9 @@ with real funds.
   integration tests pass locally. See [SETUP.md](SETUP.md) for the exact state
   and remaining MetaMask steps.
 - The three-wallet Sepolia flow still needs funded accounts and a manual run.
-- Public site deployment is intentionally pending.
+- Public demo is live at <https://revine-azure.vercel.app>. It uses Sepolia;
+  proof mode is off, the current invoice contract is fingerprint-only, and the
+  Demo Bank attestation uses synthetic data.
 
 ## Local checks
 
