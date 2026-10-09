@@ -12,9 +12,11 @@ import { StatusBadge } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { WalletGate } from "@/components/wallet-gate";
-import { displayName, sameAddress } from "@/lib/demo-names";
+import { RoleGuide } from "@/components/role-guide";
+import { sameAddress } from "@/lib/demo-names";
 import { formatDate, formatDayMonth, formatDue, formatTimeAgo, nowSeconds } from "@/lib/format";
 import { useInvoices, useWallet } from "@/lib/hooks";
+import { useDisplayNameLookup } from "@/lib/profile-names";
 import { isFresh, isOverdue, lastActivity, plural } from "@/lib/invoice";
 import { useRememberRole } from "@/lib/role";
 
@@ -22,7 +24,7 @@ type BuyerTab = "confirm" | "pay" | "history";
 
 export function BuyerDashboard() {
   return (
-    <WalletGate>
+    <WalletGate role="buyer">
       <BuyerInvoices />
     </WalletGate>
   );
@@ -31,7 +33,8 @@ export function BuyerDashboard() {
 function BuyerInvoices() {
   useRememberRole("buyer");
   const { address } = useWallet();
-  const { invoices, isLoading, error } = useInvoices();
+  const displayName = useDisplayNameLookup();
+  const { invoices, isLoading, error, refetch } = useInvoices();
   const [tab, setTab] = useState<BuyerTab>("confirm");
   const flows = useInvoiceFlows({ onConfirmed: () => setTab("pay") });
   const now = nowSeconds();
@@ -98,8 +101,9 @@ function BuyerInvoices() {
       />
 
       <PageContainer overlap>
+        <RoleGuide role="buyer" />
         {error ? (
-          <ErrorNote>{error.message}</ErrorNote>
+          <ErrorNote onRetry={refetch}>We couldn&apos;t load your invoices. Check your connection and try again.</ErrorNote>
         ) : (
           <>
             <TabsContent value="confirm">

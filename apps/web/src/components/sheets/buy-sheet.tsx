@@ -11,8 +11,8 @@ import { MoneyBridge } from "@/components/money-bridge";
 import { ReturnLine } from "@/components/return-line";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { displayName } from "@/lib/demo-names";
 import { formatDate, formatRupiah } from "@/lib/format";
+import { useDisplayNameLookup } from "@/lib/profile-names";
 import type { Invoice } from "@/lib/types";
 
 /** Buy sheet (§9.9): what you pay, what you get and when, who stands behind it, and the risk. */
@@ -30,6 +30,7 @@ export function BuySheet({
   disabled: boolean; // wrong network
 }) {
   const { midr, isLoading, enough } = useCanAfford(invoice.askPrice);
+  const displayName = useDisplayNameLookup();
 
   return (
     <ActionSheet

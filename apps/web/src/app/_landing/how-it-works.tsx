@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRightIcon, CircleCheckIcon, FingerprintPatternIcon } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import { StatusBadge } from "@/components/status-badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -52,8 +52,8 @@ const STEP_MS = 6000;
 
 /**
  * §8.1's five steps as pill tabs over a split panel, each step with the piece of the app it happens
- * in. While the section is in view the tabs advance on their own; hovering pauses, and choosing a
- * tab hands control to the visitor for good. Reduced motion never advances.
+ * in. While the section is in view the tabs advance on their own; choosing a tab hands control to
+ * the visitor for good. Reduced motion never advances.
  */
 export function HowItWorks() {
   const [index, setIndex] = useState(0);
@@ -62,6 +62,12 @@ export function HowItWorks() {
   const reduced = useReducedMotion();
   const auto = inView && !manual && !reduced;
   const step = STEPS[index];
+
+  useEffect(() => {
+    if (!auto) return;
+    const timer = window.setTimeout(() => setIndex((current) => (current + 1) % STEPS.length), STEP_MS);
+    return () => window.clearTimeout(timer);
+  }, [auto, index]);
 
   return (
     <div ref={ref} className="group/how flex flex-col gap-8">
@@ -84,9 +90,8 @@ export function HowItWorks() {
                 <span
                   key={index}
                   aria-hidden
-                  onAnimationEnd={() => setIndex((index + 1) % STEPS.length)}
                   style={{ animationDuration: `${STEP_MS}ms` }}
-                  className="absolute inset-0 origin-left animate-[revine-progress_linear_both] bg-white/14 group-hover/how:[animation-play-state:paused]"
+                  className="absolute inset-0 origin-left animate-[revine-progress_linear_both] bg-white/14"
                 />
               )}
               <span aria-hidden className={cn("relative size-2 rounded-full group-data-[state=active]/pill:ring-1 group-data-[state=active]/pill:ring-white/60", ROLE_DOT[s.role])} />

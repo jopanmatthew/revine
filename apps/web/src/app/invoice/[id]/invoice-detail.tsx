@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftIcon, CheckIcon, ChevronDownIcon, CopyIcon, LockIcon } from "lucide-react";
+import { ArrowLeftIcon, CheckIcon, ChevronDownIcon, CopyIcon, LockIcon, WalletIcon } from "lucide-react";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 
@@ -15,9 +15,11 @@ import { RupiahAmount } from "@/components/rupiah-amount";
 import { InvoiceStatusBadges } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { displayName, sameAddress } from "@/lib/demo-names";
+import { WalletButton } from "@/components/wallet-button";
+import { sameAddress } from "@/lib/demo-names";
 import { formatDate, formatDateTime, formatDue, nowSeconds } from "@/lib/format";
 import { useInvoice, useInvoiceDetails, useWallet } from "@/lib/hooks";
+import { useDisplayNameLookup } from "@/lib/profile-names";
 import type { Invoice } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -29,7 +31,7 @@ function parseId(raw: string): bigint | null {
 /** Invoice detail (§9.10). Public: anyone can read the public half without a wallet. */
 export function InvoiceDetail({ rawId }: { rawId: string }) {
   const id = parseId(rawId);
-  const { invoice, isLoading } = useInvoice(id ?? 0n);
+  const { invoice, isLoading, error, refetch } = useInvoice(id ?? 0n);
 
   if (isLoading) {
     return (
@@ -37,6 +39,20 @@ export function InvoiceDetail({ rawId }: { rawId: string }) {
         <div className="h-64 bg-brand-900 sm:h-80" />
         <PageContainer overlap>
           <Skeleton className="h-64 w-full rounded-3xl" />
+        </PageContainer>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Cover title={<>Let&apos;s try <strong>again.</strong></>} lede="We couldn't load this invoice right now. Please try again in a moment." />
+        <PageContainer overlap>
+          <Panel className="flex flex-col items-center gap-4 px-6 py-12 text-center">
+            <p role="alert" className="text-base text-ink-muted">There was a connection problem while loading the invoice.</p>
+            <Button className="h-11 px-6" onClick={refetch}>Try again</Button>
+          </Panel>
         </PageContainer>
       </>
     );
@@ -69,7 +85,8 @@ export function InvoiceDetail({ rawId }: { rawId: string }) {
 }
 
 function InvoiceView({ invoice }: { invoice: Invoice }) {
-  const { address } = useWallet();
+  const { address, isConnecting } = useWallet();
+  const displayName = useDisplayNameLookup();
   const flows = useInvoiceFlows();
   const now = nowSeconds();
   const isSeller = sameAddress(address, invoice.seller);
@@ -80,7 +97,9 @@ function InvoiceView({ invoice }: { invoice: Invoice }) {
 
   // The same one action per role as the dashboards (§9.10).
   let action: ReactNode = null;
-  if (isSeller && invoice.status === "Verified") {
+  if (!address && !isConnecting) {
+    action = <WalletButton className={coverActionClass} />;
+  } else if (isSeller && invoice.status === "Verified") {
     action = <ActionButton onClick={() => flows.getFinanced(invoice)} disabled={flows.disabled}>Get financed</ActionButton>;
   } else if (isSeller && invoice.status === "Listed") {
     action = (
@@ -89,7 +108,7 @@ function InvoiceView({ invoice }: { invoice: Invoice }) {
       </ActionButton>
     );
   } else if (isBuyer && invoice.status === "Created") {
-    action = <ActionButton onClick={() => flows.review(invoice)} disabled={flows.disabled}>Review</ActionButton>;
+    action = <ActionButton onClick={() => flows.review(invoice)} disabled={flows.disabled}>Review invoice</ActionButton>;
   } else if (isBuyer && open) {
     action = <ActionButton onClick={() => flows.pay(invoice)} disabled={flows.disabled}>Pay</ActionButton>;
   } else if (address && !isSeller && !isHolder && invoice.status === "Listed" && now < invoice.dueDate) {
@@ -143,6 +162,7 @@ function InvoiceView({ invoice }: { invoice: Invoice }) {
       </Cover>
 
       <PageContainer overlap>
+        <InvoiceAccessNote invoice={invoice} address={address} />
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
           <div className="flex flex-col gap-6">
             {(invoice.status === "Listed" || invoice.status === "Financed" || (invoice.status === "Paid" && invoice.financedAt > 0)) && (
@@ -170,6 +190,36 @@ function InvoiceView({ invoice }: { invoice: Invoice }) {
 
       {flows.ui}
     </>
+  );
+}
+
+function InvoiceAccessNote({ invoice, address }: { invoice: Invoice; address?: string }) {
+  const displayName = useDisplayNameLookup();
+  const isParty = sameAddress(address, invoice.seller) || sameAddress(address, invoice.buyer) || sameAddress(address, invoice.holder);
+  const buyerAction = invoice.status === "Created" || invoice.status === "Verified" || invoice.status === "Financed";
+  if (address && (isParty || !buyerAction)) return null;
+
+  return (
+    <Panel className="flex flex-col gap-4 px-5 py-5 sm:flex-row sm:items-center sm:px-6">
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-brand-700/[0.08] text-brand-700"><WalletIcon className="size-5" aria-hidden /></span>
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <h2 className="text-base font-bold text-ink">{address ? "Use the buyer's wallet to confirm or pay" : "Connect your wallet to take the next step"}</h2>
+        <p className="text-sm leading-relaxed text-ink-muted">
+          {address
+            ? "This wallet isn't the buyer for this invoice. Disconnect it from Wallet options, then reconnect with the buyer's account."
+            : invoice.status === "Created"
+              ? "If this invoice was sent to you, connect the buyer's wallet to review the private details and confirm or reject it."
+              : "Connect as the seller or buyer to view private details. Buyers can pay; financiers can purchase an available listing."}
+        </p>
+        {buyerAction && (
+          <div className="mt-1 flex min-w-0 flex-col gap-1">
+            <span className="text-xs font-medium text-ink-muted">Buyer wallet · {displayName(invoice.buyer)}</span>
+            <code className="break-all text-xs text-ink">{invoice.buyer}</code>
+          </div>
+        )}
+      </div>
+      <WalletButton connectedLabel="Wallet options" className="h-11 w-fit gap-2 border-border bg-card px-4 text-ink hover:bg-muted hover:text-ink" />
+    </Panel>
   );
 }
 

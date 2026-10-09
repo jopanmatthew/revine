@@ -2,6 +2,7 @@
 // Demo wallets supplied for the Sepolia walkthrough (PRD §18.4).
 import { shortAddress } from "@/lib/format";
 import type { Address } from "@/lib/types";
+import { USE_MOCKS } from "@/lib/config";
 import { DEMO_WALLETS } from "./demo-wallets";
 
 export { DEMO_WALLETS };
@@ -29,9 +30,9 @@ export function demoName(address?: string | null): string | undefined {
   return address ? NAMES.get(address.toLowerCase()) : undefined;
 }
 
-/** For running text: the demo name, otherwise "0x12…ab". */
+/** Demo aliases are only used by the simulated prototype; real wallets need a user-provided name. */
 export function displayName(address: string): string {
-  return demoName(address) ?? shortAddress(address);
+  return (USE_MOCKS ? demoName(address) : undefined) ?? shortAddress(address);
 }
 
 export function sameAddress(a?: string | null, b?: string | null): boolean {

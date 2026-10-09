@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { WalletGate } from "@/components/wallet-gate";
-import { displayName, sameAddress } from "@/lib/demo-names";
+import { RoleGuide } from "@/components/role-guide";
+import { sameAddress } from "@/lib/demo-names";
 import {
   annualizedReturn,
   daysToDue,
@@ -37,6 +38,7 @@ import {
   returnPercent,
 } from "@/lib/format";
 import { useCreditBadge, useInvoices, useWallet } from "@/lib/hooks";
+import { useDisplayNameLookup } from "@/lib/profile-names";
 import { isFresh } from "@/lib/invoice";
 import { useRememberRole } from "@/lib/role";
 import type { Invoice } from "@/lib/types";
@@ -65,7 +67,7 @@ const SORTERS: Record<SortOrder, (a: Invoice, b: Invoice) => number> = {
 
 export function FinancierDashboard() {
   return (
-    <WalletGate>
+    <WalletGate role="financier">
       <FinancierInvoices />
     </WalletGate>
   );
@@ -74,7 +76,8 @@ export function FinancierDashboard() {
 function FinancierInvoices() {
   useRememberRole("financier");
   const { address } = useWallet();
-  const { invoices, isLoading, error } = useInvoices();
+  const displayName = useDisplayNameLookup();
+  const { invoices, isLoading, error, refetch } = useInvoices();
   const [tab, setTab] = useState<FinancierTab>("marketplace");
   const [sort, setSort] = useState<SortOrder>("return");
   const [badgeOnly, setBadgeOnly] = useState(false);
@@ -93,7 +96,8 @@ function FinancierInvoices() {
 
   // Portfolio figures (§9.9): the cover carries them on both tabs.
   const invested = held.reduce((sum, inv) => sum + inv.askPrice, 0n);
-  const expected = held.filter((inv) => inv.status === "Financed").reduce((sum, inv) => sum + inv.faceAmount, 0n);
+  const awaitingRepayment = held.filter((inv) => inv.status === "Financed");
+  const expected = awaitingRepayment.reduce((sum, inv) => sum + inv.faceAmount, 0n);
   const paid = held.filter((inv) => inv.status === "Paid");
   const received = paid.reduce((sum, inv) => sum + inv.faceAmount, 0n);
   const profit = paid.reduce((sum, inv) => sum + inv.faceAmount - inv.askPrice, 0n);
@@ -108,22 +112,22 @@ function FinancierInvoices() {
         }
         loading={isLoading}
         hero={{
-          label: "Expected",
+          label: "Expected repayments",
           value: (
             <PrintedFigure value={expected}>
               <RupiahAmount value={expected} />
             </PrintedFigure>
           ),
           note:
-            open.length > 0
-              ? `Still due to you from buyers. ${open.length === 1 ? "1 invoice is" : `${open.length} invoices are`} open for financing right now.`
-              : "Still due to you from buyers. No invoices are open for financing right now.",
+            awaitingRepayment.length > 0
+              ? `Full amounts still due on ${awaitingRepayment.length === 1 ? "1 invoice you've financed" : `${awaitingRepayment.length} invoices you've financed`}. Received when the buyers pay.`
+              : "You have no repayments pending. Browse the marketplace to finance your first invoice.",
         }}
         figures={[
-          { label: "Invested", value: formatRupiah(invested) },
-          { label: "Received", value: formatRupiah(received) },
+          { label: "Total financed", value: formatRupiah(invested) },
+          { label: "Repaid to you", value: formatRupiah(received) },
           {
-            label: "Profit so far",
+            label: "Profit received",
             value: (
               <PrintedFigure value={profit}>
                 <span className="text-mint">{formatRupiah(profit, { sign: true })}</span>
@@ -163,11 +167,13 @@ function FinancierInvoices() {
       />
 
       <PageContainer overlap>
+        <RoleGuide role="financier" />
         {error ? (
-          <ErrorNote>{error.message}</ErrorNote>
+          <ErrorNote onRetry={refetch}>We couldn&apos;t load your invoices. Check your connection and try again.</ErrorNote>
         ) : (
           <>
             <TabsContent value="marketplace" className="flex flex-col gap-3">
+              <p className="px-1 text-sm leading-relaxed text-ink-muted">Choose a buyer-confirmed invoice. Review the buyer&apos;s history, the price and the due date before financing.</p>
               {isLoading ? (
                 <LedgerSkeleton rows={2} />
               ) : open.length === 0 ? (
@@ -301,6 +307,7 @@ function MarketEntry({
   onFinance: () => void;
 }) {
   const { badge, isLoading } = useCreditBadge(invoice.seller);
+  const displayName = useDisplayNameLookup();
   if (badgeOnly && !isLoading && !badge?.isValid) return null;
 
   const pct = returnPercent(invoice.faceAmount, invoice.askPrice);

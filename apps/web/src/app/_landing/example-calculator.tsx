@@ -86,7 +86,7 @@ export function ExampleCalculator() {
       <div className="flex flex-col overflow-hidden rounded-3xl bg-brand-900 text-white shadow-[0_30px_60px_-30px_rgb(11_31_26/0.6)]">
         <div className="flex flex-col gap-1.5 px-6 pt-7 pb-7 sm:px-8 sm:pt-8">
           <span className="text-sm text-white/70">You receive today</span>
-          <span className="text-[2.75rem] leading-none font-bold tracking-tight tabular-nums sm:text-5xl">
+          <span className="text-[clamp(1.5rem,8vw,2.75rem)] leading-none font-bold tracking-tight tabular-nums sm:text-5xl">
             {formatRupiah(price)}
           </span>
           <span className="mt-1 text-sm text-white/65">

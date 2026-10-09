@@ -19,6 +19,7 @@ export interface InvoiceResult {
   invoice: Invoice | null;
   isLoading: boolean;
   error: Error | null;
+  refetch: () => void;
 }
 
 const NO_INVOICES: Invoice[] = [];
@@ -70,7 +71,7 @@ function useMockInvoices(): InvoicesResult {
 
 function useMockInvoice(id: bigint): InvoiceResult {
   const { loaded, invoices } = useMockState();
-  return { invoice: loaded ? (invoices.find((inv) => inv.id === id) ?? null) : null, isLoading: !loaded, error: null };
+  return { invoice: loaded ? (invoices.find((inv) => inv.id === id) ?? null) : null, isLoading: !loaded, error: null, refetch: noop };
 }
 
 function useChainInvoices(): InvoicesResult {
@@ -128,6 +129,10 @@ function useChainInvoice(id: bigint): InvoiceResult {
     invoice: exists && invoiceQuery.data ? fromContractInvoice(invoiceQuery.data as ContractInvoice) : null,
     isLoading: CONTRACTS_CONFIGURED && id > 0n && (countQuery.isLoading || (exists && invoiceQuery.isLoading)),
     error: countQuery.error ?? invoiceQuery.error ?? null,
+    refetch: () => {
+      void countQuery.refetch();
+      if (exists) void invoiceQuery.refetch();
+    },
   };
 }
 

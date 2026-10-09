@@ -8,7 +8,7 @@ import { useEffect, type ReactNode } from "react";
 import { Cover } from "@/components/cover";
 import { PageContainer, panelClass } from "@/components/page";
 import { Skeleton } from "@/components/ui/skeleton";
-import { WalletGate } from "@/components/wallet-gate";
+import { useWallet } from "@/lib/hooks";
 import type { Role } from "@/lib/invoice";
 import { rememberRole, useLastRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
@@ -25,8 +25,8 @@ const ROLES: {
 }[] = [
   {
     role: "seller",
-    title: "I sell goods",
-    description: "Get paid now for your invoices",
+    title: "Get paid sooner",
+    description: "Offer an unpaid invoice for early payment",
     icon: <StoreIcon />,
     chip: "bg-brand-700 text-white",
     figure: "+Rp9.700.000",
@@ -34,8 +34,8 @@ const ROLES: {
   },
   {
     role: "buyer",
-    title: "I owe an invoice",
-    description: "Confirm and pay invoices sent to you",
+    title: "Confirm & pay",
+    description: "Review invoices sent to your business",
     icon: <ReceiptTextIcon />,
     chip: "bg-ink text-white",
     figure: "Rp10.000.000",
@@ -43,33 +43,30 @@ const ROLES: {
   },
   {
     role: "financier",
-    title: "I have capital",
-    description: "Finance verified invoices and earn",
+    title: "Finance a business",
+    description: "Buy confirmed invoices and track repayments",
     icon: <HandCoinsIcon />,
     chip: "bg-mint text-brand-900",
     figure: "+3,09%",
-    figureNote: "in 30 days, on a confirmed invoice",
+    figureNote: "in 30 days, if the buyer repays on time",
   },
 ];
 
 export function RolePicker() {
-  return (
-    <WalletGate>
-      <Picker />
-    </WalletGate>
-  );
+  return <Picker />;
 }
 
 function Picker() {
   const lastRole = useLastRole();
   const router = useRouter();
+  const { isConnected } = useWallet();
 
   // A returning visitor goes straight back to the view they used last.
   useEffect(() => {
-    if (lastRole) router.replace(`/${lastRole}`);
-  }, [lastRole, router]);
+    if (lastRole && isConnected) router.replace(`/${lastRole}`);
+  }, [lastRole, isConnected, router]);
 
-  if (lastRole !== null) {
+  if (lastRole === undefined || (lastRole && isConnected)) {
     return (
       <>
         <div className="h-56 bg-brand-900 sm:h-72" />
@@ -92,7 +89,7 @@ function Picker() {
             Pick how you&apos;ll use <strong>revine.</strong>
           </>
         }
-        lede="Roles are views, not accounts. Any wallet can use any of them, and you can switch at the top any time."
+        lede="Choose what you want to do, then connect your wallet. You can switch between all three roles at any time."
       />
       <PageContainer overlap>
         <ul className="grid gap-4 md:grid-cols-3 md:gap-5">
@@ -119,6 +116,7 @@ function Picker() {
                   </div>
                 </div>
                 <div className="mt-auto flex flex-col gap-0.5 border-t border-foreground/[0.07] bg-muted/40 px-6 py-5 sm:px-7">
+                  <span className="mb-1 text-xs font-medium text-ink-muted">Example</span>
                   <span className="text-3xl font-bold tracking-tight text-brand-700 tabular-nums">{figure}</span>
                   <span className="text-xs text-ink-muted">{figureNote}</span>
                 </div>

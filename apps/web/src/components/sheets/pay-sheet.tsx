@@ -6,8 +6,9 @@ import { DueText } from "@/components/due-text";
 import { RupiahAmount } from "@/components/rupiah-amount";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { displayName, sameAddress } from "@/lib/demo-names";
+import { sameAddress } from "@/lib/demo-names";
 import { formatRupiah } from "@/lib/format";
+import { useDisplayNameLookup } from "@/lib/profile-names";
 import type { Invoice } from "@/lib/types";
 
 /** Pay sheet (§9.8): the full amount, to whoever holds the invoice right now. */
@@ -25,6 +26,7 @@ export function PaySheet({
   disabled: boolean; // wrong network
 }) {
   const { midr, isLoading, enough } = useCanAfford(invoice.faceAmount);
+  const displayName = useDisplayNameLookup();
   // Read live from the store, so the payee is the holder at the moment the sheet is on screen.
   const holder = invoice.holder ?? invoice.seller;
   const sold = !sameAddress(holder, invoice.seller);
@@ -42,7 +44,7 @@ export function PaySheet({
       }
     >
       <div className="flex flex-col gap-2">
-        <RupiahAmount value={invoice.faceAmount} className="text-4xl font-bold tracking-tight" />
+        <RupiahAmount value={invoice.faceAmount} className="text-[clamp(1.4rem,7vw,2.25rem)] font-bold tracking-tight" />
         <p className="text-base text-pretty text-ink">
           You pay {formatRupiah(invoice.faceAmount)} to <strong className="font-bold">{displayName(holder)}</strong>{" "}
           (current invoice holder).

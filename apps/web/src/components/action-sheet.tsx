@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore, type ReactNode } from "react";
+import { useRef, useSyncExternalStore, type ReactNode } from "react";
 
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -44,17 +44,20 @@ export function ActionSheet({
   dismissible?: boolean; // false while a transaction runs
 }) {
   const desktop = useIsDesktop();
+  const contentRef = useRef<HTMLDivElement>(null);
 
   return (
     <Sheet open={open} onOpenChange={(next) => (next || dismissible) && onOpenChange(next)}>
       <SheetContent
+        ref={contentRef}
+        tabIndex={-1}
         side={desktop ? "right" : "bottom"}
         showCloseButton={dismissible}
         // Focus the sheet itself, not its first button (often a tiny copy icon): screen readers
         // still land inside the dialog, and nothing looks pre-selected.
         onOpenAutoFocus={(event) => {
           event.preventDefault();
-          (event.currentTarget as HTMLElement | null)?.focus();
+          contentRef.current?.focus();
         }}
         className={cn(
           "gap-0 bg-card outline-none",
@@ -64,13 +67,13 @@ export function ActionSheet({
         )}
       >
         {!desktop && <div aria-hidden className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-foreground/15" />}
-        <SheetHeader className="gap-1 px-6 pt-6 pr-14 pb-4">
+        <SheetHeader className="shrink-0 gap-1 px-6 pt-6 pr-14 pb-4">
           <SheetTitle className="text-2xl font-bold tracking-tight">{title}</SheetTitle>
           {description && <SheetDescription>{description}</SheetDescription>}
         </SheetHeader>
-        <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto overscroll-contain px-6 pb-6">{children}</div>
+        <div data-slot="sheet-body" className="flex min-h-0 flex-1 flex-col gap-5 overflow-x-hidden overflow-y-auto overscroll-contain px-6 pb-6 [&>*]:shrink-0">{children}</div>
         {footer && (
-          <SheetFooter className="mt-0 border-t bg-card px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
+          <SheetFooter className="mt-0 shrink-0 border-t bg-card px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
             {footer}
           </SheetFooter>
         )}

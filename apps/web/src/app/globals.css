@@ -173,6 +173,11 @@
   }
 }
 
+@keyframes revine-amount-highlight {
+  from { filter: brightness(1.2); }
+  to { filter: brightness(1); }
+}
+
 [data-fresh] {
   position: relative;
 }
@@ -190,12 +195,12 @@
 }
 
 [data-fresh] [data-print] {
-  animation: revine-print 700ms var(--ease-out) both;
+  animation: revine-amount-highlight 300ms var(--ease-out);
 }
 
 /* Each finished step in the progress view prints in, like a passbook line. */
 li[data-state="done"] [data-step-label] {
-  animation: revine-print 500ms var(--ease-out) both;
+  animation: revine-amount-highlight 300ms var(--ease-out);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -297,7 +302,7 @@ li[data-state="done"] [data-step-label] {
 
 /* Each How it works step prints its key figure as it appears. */
 [data-step-view] [data-print] {
-  animation: revine-print 700ms var(--ease-out) 260ms both;
+  animation: revine-amount-highlight 300ms var(--ease-out);
 }
 
 /* Private by design: bars black out the line items, then the fingerprint is written. */
@@ -331,5 +336,71 @@ li[data-state="done"] [data-step-label] {
   [data-in] [data-type] {
     animation: none;
     clip-path: none;
+  }
+}
+
+/* Small, shared movement for app navigation, tab changes, and newly shown records. */
+@keyframes revine-enter {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes revine-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-motion="header"] {
+    animation: revine-drop 240ms var(--ease-out) both;
+  }
+
+  [data-motion="cover"] {
+    animation: revine-enter 300ms var(--ease-out) both;
+  }
+
+  [data-motion="page"] {
+    animation: revine-enter 320ms var(--ease-out) 60ms both;
+  }
+
+  [data-slot="tabs-content"][data-state="active"] {
+    animation: revine-enter 240ms var(--ease-out) both;
+  }
+
+  [data-motion-list] > * {
+    animation: revine-enter 280ms var(--ease-out) both;
+  }
+
+  [data-motion-list] > *:nth-child(2) { animation-delay: 35ms; }
+  [data-motion-list] > *:nth-child(3) { animation-delay: 70ms; }
+  [data-motion-list] > *:nth-child(4) { animation-delay: 105ms; }
+  [data-motion-list] > *:nth-child(5) { animation-delay: 140ms; }
+  [data-motion-list] > *:nth-child(n + 6) { animation-delay: 175ms; }
+
+  [data-motion-item] {
+    animation: revine-enter 280ms var(--ease-out) var(--motion-delay, 0ms) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

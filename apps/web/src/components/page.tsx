@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { CircleAlertIcon, RefreshCwIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
 
@@ -17,6 +19,7 @@ export function PageContainer({
 }) {
   return (
     <div
+      data-motion="page"
       className={cn(
         "mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 pb-24 sm:gap-8 sm:pb-20",
         overlap ? "relative z-10 -mt-12 sm:-mt-14" : "pt-6 sm:pt-10",
@@ -49,11 +52,13 @@ export function PanelHeader({ title, hint, children }: { title: ReactNode; hint?
   );
 }
 
-export function ErrorNote({ children }: { children: ReactNode }) {
+export function ErrorNote({ children, onRetry }: { children: ReactNode; onRetry?: () => void }) {
   return (
-    <p role="alert" className="rounded-2xl bg-danger/10 px-4 py-3.5 text-sm text-danger">
-      {children}
-    </p>
+    <div role="alert" className="flex flex-wrap items-center gap-3 rounded-2xl bg-danger/10 px-4 py-3.5 text-sm text-danger">
+      <CircleAlertIcon className="size-5 shrink-0" aria-hidden />
+      <p className="min-w-0 flex-1">{children}</p>
+      {onRetry && <Button variant="outline" className="h-10 gap-2 bg-card px-4 text-ink" onClick={onRetry}><RefreshCwIcon className="size-4" aria-hidden />Try again</Button>}
+    </div>
   );
 }
 

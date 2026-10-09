@@ -65,7 +65,7 @@ export function ReviewSheet({
       }
     >
       <div className="flex flex-col gap-1">
-        <RupiahAmount value={invoice.faceAmount} className="text-3xl font-bold tracking-tight" />
+        <RupiahAmount value={invoice.faceAmount} className="text-[clamp(1.4rem,7vw,1.875rem)] font-bold tracking-tight" />
         <p className="text-sm text-ink-muted">
           from <AddressName address={invoice.seller} className="font-medium text-ink" /> · due {formatDate(invoice.dueDate)}
         </p>

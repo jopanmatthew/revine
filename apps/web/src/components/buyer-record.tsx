@@ -6,9 +6,9 @@ import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { buyerRecord, pairHistory, recordSummary, TIER_LABELS, type BuyerTier } from "@/lib/buyer-record";
-import { displayName } from "@/lib/demo-names";
 import { formatPercent, nowSeconds } from "@/lib/format";
 import { useInvoices } from "@/lib/hooks";
+import { useDisplayNameLookup } from "@/lib/profile-names";
 import type { Address } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -62,6 +62,7 @@ export function BuyerRecordChip({
 /** The full record for the Buy sheet: what the chain shows, plus the cold-start guidance (§9.9). */
 export function BuyerRecordPanel({ buyer, seller }: { buyer: Address; seller: Address }) {
   const { record, invoices, isLoading } = useBuyerRecord(buyer);
+  const displayName = useDisplayNameLookup();
   if (isLoading) return null;
   const pair = pairHistory(invoices, seller, buyer);
   const name = displayName(buyer);

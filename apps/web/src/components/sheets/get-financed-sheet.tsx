@@ -55,13 +55,13 @@ export function GetFinancedSheet({
         </Button>
       }
     >
-      <dl className="grid grid-cols-3 gap-px overflow-hidden rounded-lg bg-foreground/10 ring-1 ring-foreground/10">
+      <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-foreground/10 ring-1 ring-foreground/10">
         {[
           ["Invoice amount", <RupiahAmount key="a" value={invoice.faceAmount} />],
           ["Due", formatDate(invoice.dueDate)],
           ["Days left", `${days} ${days === 1 ? "day" : "days"}`],
         ].map(([label, value]) => (
-          <div key={label as string} className="flex flex-col gap-0.5 bg-card px-3 py-2.5">
+          <div key={label as string} className={`flex min-w-0 flex-col gap-1 bg-card px-3 py-3 ${label === "Invoice amount" ? "col-span-2" : ""}`}>
             <dt className="text-[0.6875rem] font-medium text-ink-muted">{label}</dt>
             <dd className="text-sm font-bold text-ink tabular-nums">{value}</dd>
           </div>
@@ -92,8 +92,8 @@ export function GetFinancedSheet({
       </div>
 
       <div className="flex flex-col gap-1 rounded-xl bg-brand-900 px-4 py-4 text-white">
-        <span className="text-sm text-white/70">You receive today</span>
-        <RupiahAmount value={price} className="text-4xl font-bold tracking-tight" />
+        <span className="text-sm text-white/70">You receive when financed</span>
+        <RupiahAmount value={price} className="text-[clamp(1.4rem,7vw,2.25rem)] font-bold tracking-tight" />
         <span className="mt-1 text-sm text-white/70">
           Financier earns: <span className="font-medium text-mint">{formatRupiah(profit)}</span> (
           {formatPercent(returnPercent(invoice.faceAmount, price))} in {days} {days === 1 ? "day" : "days"})

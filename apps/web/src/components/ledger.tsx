@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ReceiptTextIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { panelClass } from "@/components/page";
@@ -34,7 +35,7 @@ export function LedgerSheet({ children, header, className }: { children: ReactNo
           {header}
         </div>
       )}
-      <ul>{children}</ul>
+      <ul data-motion-list>{children}</ul>
     </div>
   );
 }
@@ -129,6 +130,7 @@ export function LedgerSkeleton({ rows = 4 }: { rows?: number }) {
 export function LedgerEmpty({ title, description, action }: { title: string; description?: string; action?: ReactNode }) {
   return (
     <div className={cn(panelClass, "flex flex-col items-center gap-3 px-6 py-14 text-center sm:py-20")}>
+      <span className="mb-1 flex size-12 items-center justify-center rounded-2xl bg-brand-700/[0.08] text-brand-700"><ReceiptTextIcon className="size-6" aria-hidden /></span>
       <p className="text-lg font-bold tracking-tight text-ink">{title}</p>
       {description && <p className="max-w-sm text-sm text-pretty text-ink-muted">{description}</p>}
       {action && <div className="pt-2">{action}</div>}

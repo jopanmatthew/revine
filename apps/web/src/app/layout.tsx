@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 
 import { NetworkBanner } from "@/components/network-banner";
 import { SiteHeader } from "@/components/site-header";
-import { TestnetStrip } from "@/components/testnet-strip";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { satoshi } from "@/fonts/satoshi";
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b1f1a", // the testnet strip at the very top (brand-900); light theme only
+  themeColor: "#0b1f1a", // brand-900; light theme only
   viewportFit: "cover",
 };
 
@@ -30,7 +29,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         <Providers>
           <TooltipProvider>
-            <TestnetStrip />
             <SiteHeader />
             <NetworkBanner />
             <main className="flex flex-1 flex-col">{children}</main>

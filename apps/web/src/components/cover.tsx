@@ -8,8 +8,7 @@ import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
 /**
- * Re-prints its content left to right when `value` changes after mount (the Passbook signature):
- * a cover figure ticking to a new total reads like the passbook printer adding a line.
+ * Highlight a changed amount without ever clipping or hiding its digits.
  */
 export function PrintedFigure({ value, children }: { value: bigint | number | string; children: ReactNode }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -17,8 +16,8 @@ export function PrintedFigure({ value, children }: { value: bigint | number | st
 
   useEffect(() => {
     if (previous.current !== value && ref.current && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      ref.current.animate([{ clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0 0 0)" }], {
-        duration: 700,
+      ref.current.animate([{ filter: "brightness(1.2)" }, { filter: "brightness(1)" }], {
+        duration: 300,
         easing: "cubic-bezier(0.23, 1, 0.32, 1)",
       });
     }
@@ -67,7 +66,7 @@ export function Cover({
   children?: ReactNode; // e.g. a back link above the title
 }) {
   return (
-    <section className="bg-brand-900 text-white">
+    <section data-motion="cover" className="bg-brand-900 text-white">
       <div
         className={cn(
           "mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 pt-6 sm:gap-8 sm:pt-10",
@@ -104,7 +103,7 @@ export function Cover({
             ) : (
               <div className="flex min-w-0 flex-col gap-2">
                 <span className="text-sm text-white/60">{hero.label}</span>
-                <span className="text-[2.75rem] leading-[0.95] font-bold tracking-[-0.035em] tabular-nums sm:text-6xl lg:text-7xl">
+                <span className="text-[clamp(1.65rem,8.5vw,2.75rem)] leading-[0.95] font-bold tracking-[-0.035em] tabular-nums sm:text-6xl lg:text-7xl">
                   {hero.value}
                 </span>
                 {hero.note && <span className="mt-1.5 max-w-xl text-sm text-pretty text-white/70 sm:text-base">{hero.note}</span>}
@@ -139,19 +138,19 @@ export const coverActionClass = "h-12 bg-mint px-7 text-base text-brand-900 hove
 export const coverSecondaryClass =
   "h-12 border-white/25 bg-transparent px-7 text-base text-white hover:bg-white/10 hover:text-white max-sm:w-full max-sm:border-foreground/15 max-sm:bg-card max-sm:text-ink";
 
-/** A screen's tabs as pills on the cover band, like the landing's steps. Scrolls sideways on phones. */
+/** A quiet tab bar with a clear active underline; scrolls sideways on phones. */
 export function CoverTabs({ items }: { items: { value: string; label: string; count?: number }[] }) {
   return (
-    <div className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
-      <TabsList className="h-auto w-max gap-2 rounded-none bg-transparent p-0">
+    <div className="-mx-4 overflow-x-auto px-4 [scrollbar-width:thin] sm:mx-0 sm:px-0">
+      <TabsList variant="line" className="h-auto w-max justify-start gap-1 rounded-none border-b border-white/15 bg-transparent p-0 group-data-horizontal/tabs:h-auto">
         {items.map((item) => (
           <TabsTrigger
             key={item.value}
             value={item.value}
-            className="h-10 flex-none gap-2 rounded-full border-0 bg-white/[0.07] px-4 text-sm font-medium text-white/75 ring-1 ring-white/10 transition-[color,background-color,box-shadow] duration-150 hover:text-white focus-visible:ring-2 focus-visible:ring-mint/70 focus-visible:outline-none data-[state=active]:bg-white data-[state=active]:text-brand-900 data-[state=active]:shadow-[0_1px_2px_rgb(0_0_0/0.2)] data-[state=active]:ring-white"
+            className="h-11 flex-none gap-2 rounded-none border-0 border-b-2 border-transparent bg-transparent px-3 text-sm font-medium text-white/65 shadow-none transition-colors duration-150 after:hidden hover:text-white focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-mint data-[state=active]:border-mint data-[state=active]:bg-transparent data-[state=active]:text-mint data-[state=active]:shadow-none"
           >
             {item.label}
-            {item.count !== undefined && <span className="text-xs tabular-nums opacity-55">{item.count}</span>}
+            {item.count !== undefined && <span className="min-w-5 text-center text-xs font-medium tabular-nums">{item.count}</span>}
           </TabsTrigger>
         ))}
       </TabsList>

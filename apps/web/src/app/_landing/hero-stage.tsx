@@ -106,7 +106,7 @@ function BrowserWindow({ phase }: { phase: Phase }) {
             <span className="text-[0.6875rem] text-white/55">Expected</span>
             <span
               key={phase >= 1 ? "bought" : "before"}
-              className="text-3xl leading-none font-bold tracking-tight tabular-nums motion-safe:animate-[revine-print_700ms_var(--ease-out)_both]"
+              className="text-3xl leading-none font-bold tracking-tight tabular-nums motion-safe:animate-[revine-amount-highlight_300ms_var(--ease-out)]"
             >
               {phase >= 1 ? "Rp13.250.000" : "Rp3.250.000"}
             </span>

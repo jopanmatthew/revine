@@ -16,9 +16,11 @@ import { StatusBadge, StatusTag } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { WalletGate } from "@/components/wallet-gate";
-import { displayName, sameAddress } from "@/lib/demo-names";
+import { RoleGuide } from "@/components/role-guide";
+import { sameAddress } from "@/lib/demo-names";
 import { formatDate, formatDayMonth, formatRupiah, nowSeconds } from "@/lib/format";
 import { useCreditBadge, useInvoices, useWallet } from "@/lib/hooks";
+import { useDisplayNameLookup } from "@/lib/profile-names";
 import { USE_MOCKS } from "@/lib/config";
 import { isFresh, isListingExpired, lastActivity, plural } from "@/lib/invoice";
 import { useRememberRole } from "@/lib/role";
@@ -28,8 +30,8 @@ type SellerTab = "all" | Exclude<InvoiceStatus, "Rejected">;
 
 const TABS: { value: SellerTab; label: string; empty: string }[] = [
   { value: "all", label: "All", empty: "No invoices yet." },
-  { value: "Created", label: "Waiting for buyer", empty: "No invoices waiting for a buyer." },
-  { value: "Verified", label: "Ready to finance", empty: "No invoices ready to finance." },
+  { value: "Created", label: "Awaiting buyer", empty: "No invoices waiting for a buyer." },
+  { value: "Verified", label: "Ready to list", empty: "No invoices ready to finance." },
   { value: "Listed", label: "Listed", empty: "No invoices listed right now." },
   { value: "Financed", label: "Financed", empty: "No financed invoices yet." },
   { value: "Paid", label: "Paid", empty: "No paid invoices yet." },
@@ -37,7 +39,7 @@ const TABS: { value: SellerTab; label: string; empty: string }[] = [
 
 export function SellerDashboard() {
   return (
-    <WalletGate>
+    <WalletGate role="seller">
       <SellerInvoices />
     </WalletGate>
   );
@@ -47,7 +49,7 @@ export function SellerDashboard() {
  * The success moment (§9.1): when one of my invoices goes from Listed to Financed between refetches,
  * celebrate. Works across windows too, since the financier buys from their own wallet.
  */
-function usePaidToast(mine: Invoice[], loaded: boolean) {
+function usePaidToast(mine: Invoice[], loaded: boolean, displayName: (address?: string | null) => string) {
   const seen = useRef<Map<bigint, InvoiceStatus> | null>(null);
 
   useEffect(() => {
@@ -64,13 +66,14 @@ function usePaidToast(mine: Invoice[], loaded: boolean) {
         });
       }
     }
-  }, [mine, loaded]);
+  }, [mine, loaded, displayName]);
 }
 
 function SellerInvoices() {
   useRememberRole("seller");
   const { address } = useWallet();
-  const { invoices, isLoading, error } = useInvoices();
+  const displayName = useDisplayNameLookup();
+  const { invoices, isLoading, error, refetch } = useInvoices();
   const { badge } = useCreditBadge(address);
   const flows = useInvoiceFlows();
   const [tab, setTab] = useState<SellerTab>("all");
@@ -80,7 +83,7 @@ function SellerInvoices() {
     () => invoices.filter((inv) => sameAddress(inv.seller, address)).sort((a, b) => Number(b.id - a.id)),
     [invoices, address],
   );
-  usePaidToast(mine, !isLoading);
+  usePaidToast(mine, !isLoading, displayName);
 
   const waiting = mine.filter((inv) => inv.status === "Created");
   const ready = mine.filter((inv) => inv.status === "Verified");
@@ -191,8 +194,8 @@ function SellerInvoices() {
           ),
           note:
             ready.length > 0
-              ? `${plural(ready.length, "invoice")} confirmed by the buyer. ${ready.length === 1 ? "List it" : "List one"} and get paid today.`
-              : "Invoices your buyer confirms show up here, ready to sell for cash today.",
+              ? `${plural(ready.length, "invoice")} confirmed by the buyer. Set a price and offer ${ready.length === 1 ? "it" : "one"} to financiers.`
+              : "Buyer-confirmed invoices appear here. Receive early payment when a financier buys your listing.",
         }}
         figures={[
           { label: "Waiting for buyer", value: waiting.length },
@@ -221,8 +224,9 @@ function SellerInvoices() {
       />
 
       <PageContainer overlap>
+        <RoleGuide role="seller" />
         {error ? (
-          <ErrorNote>{error.message}</ErrorNote>
+          <ErrorNote onRetry={refetch}>We couldn&apos;t load your invoices. Check your connection and try again.</ErrorNote>
         ) : isLoading ? (
           <LedgerSkeleton />
         ) : mine.length === 0 ? (

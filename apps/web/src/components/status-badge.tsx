@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { CheckCircle2Icon, ClockIcon, HandCoinsIcon, StoreIcon, WalletIcon, XCircleIcon } from "lucide-react";
 import { isListingExpired, isOverdue, statusLabel, type Role } from "@/lib/invoice";
 import type { Invoice, InvoiceStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -24,6 +25,14 @@ const STATUS_STYLES_DARK: Record<InvoiceStatus, string> = {
 };
 
 const WARNING_STYLE = "bg-warning text-warning-foreground";
+const STATUS_ICONS = {
+  Created: ClockIcon,
+  Verified: CheckCircle2Icon,
+  Rejected: XCircleIcon,
+  Listed: StoreIcon,
+  Financed: HandCoinsIcon,
+  Paid: WalletIcon,
+};
 
 export function StatusBadge({
   status,
@@ -36,8 +45,10 @@ export function StatusBadge({
   tone?: "light" | "dark";
   className?: string;
 }) {
+  const Icon = STATUS_ICONS[status];
   return (
     <Badge data-status={status} className={cn((tone === "dark" ? STATUS_STYLES_DARK : STATUS_STYLES)[status], className)}>
+      <Icon aria-hidden />
       {statusLabel(status, role)}
     </Badge>
   );

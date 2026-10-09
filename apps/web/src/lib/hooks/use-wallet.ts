@@ -36,17 +36,20 @@ function useMockWallet(): WalletState {
 }
 
 function useChainWallet(): WalletState {
+  // Wagmi may begin reconnecting before this boundary hydrates. Use the same
+  // initial state on the server and client, then expose the restored account.
+  const isClient = useIsClient();
   const account = useAccount();
   const { switchChain } = useSwitchChain();
-  const chainId = account.chainId;
-  const isConnected = account.status === "connected";
+  const chainId = isClient ? account.chainId : undefined;
+  const isConnected = isClient && account.status === "connected";
 
   return {
-    address: account.address,
+    address: isConnected ? account.address : undefined,
     isConnected,
-    isConnecting: account.status === "connecting" || account.status === "reconnecting",
+    isConnecting: !isClient || account.status === "connecting" || account.status === "reconnecting",
     chainId,
-    networkName: account.chain?.name,
+    networkName: isClient ? account.chain?.name : undefined,
     isWrongNetwork: isConnected && chainId !== SEPOLIA_CHAIN_ID,
     switchToSepolia: () => switchChain({ chainId: SEPOLIA_CHAIN_ID }),
   };

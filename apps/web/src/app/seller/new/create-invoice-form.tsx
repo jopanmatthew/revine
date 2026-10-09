@@ -28,9 +28,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { WalletGate } from "@/components/wallet-gate";
 import { DEMO_MODE, ZK_PROOFS_ENABLED } from "@/lib/config";
-import { demoName, displayName, sameAddress } from "@/lib/demo-names";
+import { sameAddress } from "@/lib/demo-names";
 import { daysToDue, dueDateInDays, formatDate, nowSeconds, toDueDateSeconds, toWibDateString } from "@/lib/format";
 import { useRevineActions, useWallet } from "@/lib/hooks";
+import { useDisplayNameLookup } from "@/lib/profile-names";
 import { MESSAGES } from "@/lib/messages";
 import { DEMO_INVOICE } from "@/lib/mock";
 import type { Address } from "@/lib/types";
@@ -99,7 +100,7 @@ const EMPTY_ITEM = { name: "", qty: "", unitPrice: "" };
 
 export function CreateInvoice() {
   return (
-    <WalletGate>
+    <WalletGate role="seller">
       <CreateInvoiceForm />
     </WalletGate>
   );
@@ -107,6 +108,7 @@ export function CreateInvoice() {
 
 function CreateInvoiceForm() {
   const { address, isWrongNetwork } = useWallet();
+  const displayName = useDisplayNameLookup();
   const actions = useRevineActions();
   const { start, stepper, flow } = useTxRunner();
   const [created, setCreated] = useState<{ id: bigint; buyer: string } | null>(null);
@@ -129,7 +131,7 @@ function CreateInvoiceForm() {
   const items = useFieldArray({ control, name: "items" });
   const watched = useWatch({ control });
   const total = (watched.items ?? []).reduce((sum, i) => sum + lineTotal({ qty: i?.qty ?? "", unitPrice: i?.unitPrice ?? "" }), 0);
-  const buyerName = ADDRESS.test(watched.buyer ?? "") ? demoName(watched.buyer) : undefined;
+  const buyerName = ADDRESS.test(watched.buyer ?? "") ? displayName(watched.buyer) : undefined;
   const dueSeconds = /^\d{4}-\d{2}-\d{2}$/.test(watched.dueDate ?? "") ? toDueDateSeconds(watched.dueDate!) : null;
   const totalError = (errors as { total?: { message?: string } }).total?.message;
 
@@ -268,11 +270,13 @@ function CreateInvoiceForm() {
                   {errors.buyer ? (
                     <FieldError>{errors.buyer.message}</FieldError>
                   ) : (
-                    buyerName && (
+                    buyerName ? (
                       <span className="inline-flex items-center gap-1.5 font-medium text-brand-700">
                         <CheckIcon className="size-4" aria-hidden />
                         {buyerName}
                       </span>
+                    ) : (
+                      <span className="text-ink-muted">Ask your buyer for the wallet address they will use to confirm and pay.</span>
                     )
                   )}
                 </div>
@@ -495,6 +499,7 @@ function PublicVsPrivate() {
 
 /** Success screen (§9.5): what happened, what's next, and the share link for the buyer. */
 function Created({ id, buyer, onAnother }: { id: bigint; buyer: string; onAnother: () => void }) {
+  const displayName = useDisplayNameLookup();
   const [copied, setCopied] = useState(false);
   const url = typeof window === "undefined" ? `/invoice/${id}` : `${window.location.origin}/invoice/${id}`;
   const share = `https://wa.me/?text=${encodeURIComponent(`Please confirm invoice #${id} on revine.: ${url}`)}`;
