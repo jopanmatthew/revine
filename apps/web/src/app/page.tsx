@@ -36,7 +36,7 @@ export default function LandingPage() {
           <h1
             data-hero-in
             style={{ "--i": 1 } as CSSProperties}
-            className="mt-7 max-w-4xl text-[2.75rem] leading-[1.02] font-normal tracking-[-0.035em] text-balance sm:text-6xl lg:text-7xl xl:text-[5.25rem]"
+            className="mt-7 max-w-5xl text-[2.75rem] leading-[1.02] font-normal tracking-[-0.035em] text-balance sm:text-6xl lg:text-7xl xl:text-[5.25rem]"
           >
             Get paid <span className="font-bold text-mint">today</span> for invoices due{" "}
             <span className="font-bold">next month</span>.
@@ -46,9 +46,8 @@ export default function LandingPage() {
             style={{ "--i": 2 } as CSSProperties}
             className="mt-6 max-w-2xl text-lg text-pretty text-white/75 sm:text-xl"
           >
-            revine. helps Indonesian SMEs sell unpaid invoices to financiers and receive cash now. Ownership and
-            payments are tracked on Ethereum. Your line items stay off-chain, and a fingerprint lets the buyer check
-            the private details against the public invoice record.
+            Sell an unpaid invoice for cash today. Buyers check private details against a fingerprint, while each
+            transfer of ownership is recorded on Ethereum.
           </p>
           <div data-hero-in style={{ "--i": 3 } as CSSProperties} className="mt-9 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg" className="h-12 rounded-full bg-mint px-7 text-base text-brand-900 hover:bg-white">
@@ -74,12 +73,13 @@ export default function LandingPage() {
 
       {/* 2. Example card, as a calculator */}
       <section aria-label="Example" className="mx-auto w-full max-w-6xl px-4 pt-[24rem] pb-28 md:pt-[28rem] sm:pb-36">
+        <p className="mb-5 text-xs font-bold tracking-[0.16em] text-brand-700 uppercase">A simple example</p>
         <ExampleCalculator />
       </section>
 
       {/* 3. How it works */}
       <section id="how-it-works" className="mx-auto w-full max-w-6xl scroll-mt-24 px-4 pb-28 sm:pb-36">
-        <SectionHeading title="How it works" lede="Five steps, three roles, one invoice. Watch it move, or pick a step." />
+        <SectionHeading eyebrow="The process" title="How it works" lede="Five steps, three roles, one invoice. Watch it move, or pick a step." />
         <div className="mt-10">
           <HowItWorks />
         </div>
@@ -88,6 +88,7 @@ export default function LandingPage() {
       {/* 4. Three roles, as three views of the same invoice */}
       <section className="mx-auto w-full max-w-6xl px-4 pb-28 sm:pb-36">
         <SectionHeading
+          eyebrow="One shared record"
           title="One invoice, three views."
           lede="Roles are views, not accounts: any wallet can use any of them. Here is invoice #12 as each one sees it."
         />
@@ -129,7 +130,7 @@ export default function LandingPage() {
       </section>
 
       {/* 6. Private by design */}
-      <section className="mx-auto w-full max-w-6xl px-4 pb-28 sm:pb-36">
+      <section id="privacy" className="mx-auto w-full max-w-6xl scroll-mt-28 px-4 pb-28 sm:pb-36">
         <div className="grid overflow-hidden rounded-3xl ring-1 ring-foreground/10 lg:grid-cols-2">
           <div className="flex flex-col gap-6 bg-card px-6 py-10 sm:px-10 sm:py-14">
             <h2 className="text-4xl leading-[1.05] font-bold tracking-[-0.03em] text-balance text-ink sm:text-5xl">
@@ -215,11 +216,14 @@ function HeroPlanes() {
   );
 }
 
-function SectionHeading({ title, lede }: { title: string; lede: string }) {
+function SectionHeading({ eyebrow, title, lede }: { eyebrow: string; title: string; lede: string }) {
   return (
-    <div className="mx-auto flex max-w-2xl flex-col items-center gap-3 text-center">
-      <h2 className="text-4xl leading-[1.05] font-bold tracking-[-0.03em] text-balance text-ink sm:text-5xl">{title}</h2>
-      <p className="text-lg text-pretty text-ink-muted">{lede}</p>
+    <div className="flex flex-col justify-between gap-5 border-t border-foreground/10 pt-5 sm:flex-row sm:items-end sm:gap-10">
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-bold tracking-[0.16em] text-brand-700 uppercase">{eyebrow}</span>
+        <h2 className="text-4xl leading-[1.05] font-bold tracking-[-0.03em] text-balance text-ink sm:text-5xl">{title}</h2>
+      </div>
+      <p className="max-w-md text-lg text-pretty text-ink-muted">{lede}</p>
     </div>
   );
 }

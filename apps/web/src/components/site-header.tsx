@@ -41,14 +41,45 @@ function RoleLinks({ activeHref, className }: { activeHref?: string; className?:
 
 function ActiveRoleLinks({ className }: { className?: string }) {
   const pathname = usePathname();
+  if (pathname === "/") return <LandingLinks className={className} />;
   const active = ROLES.find(({ href }) => pathname === href || pathname.startsWith(`${href}/`));
   return <RoleLinks activeHref={active?.href} className={className} />;
+}
+
+function LandingLinks({ className }: { className?: string }) {
+  return (
+    <nav aria-label="Explore revine" className={cn("flex items-center gap-6 max-md:justify-center", className)}>
+      <Link
+        href="#how-it-works"
+        className="text-sm font-medium text-white/70 transition-colors hover:text-white focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/70"
+      >
+        How it works
+      </Link>
+      <Link
+        href="#privacy"
+        className="text-sm font-medium text-white/70 transition-colors hover:text-white focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/70"
+      >
+        Privacy
+      </Link>
+    </nav>
+  );
+}
+
+function HeaderAccount() {
+  const pathname = usePathname();
+  if (pathname === "/") return null;
+  return (
+    <div className="ml-auto flex items-center gap-2 md:ml-0">
+      <BalancePill />
+      <WalletButton />
+    </div>
+  );
 }
 
 /** usePathname suspends while /invoice/[id] prerenders (Cache Components), so it sits in Suspense. */
 function RoleSwitcher({ className }: { className?: string }) {
   return (
-    <Suspense fallback={<RoleLinks className={className} />}>
+    <Suspense fallback={<span aria-hidden className={cn("invisible h-10 w-56", className)} />}>
       <ActiveRoleLinks className={className} />
     </Suspense>
   );
@@ -67,10 +98,9 @@ export function SiteHeader() {
           <Logo variant="dark" />
         </Link>
         <RoleSwitcher className="mx-auto max-md:hidden" />
-        <div className="ml-auto flex items-center gap-2 md:ml-0">
-          <BalancePill />
-          <WalletButton />
-        </div>
+        <Suspense fallback={null}>
+          <HeaderAccount />
+        </Suspense>
       </div>
       <div className="px-4 pb-3 md:hidden">
         <RoleSwitcher className="flex w-full" />
