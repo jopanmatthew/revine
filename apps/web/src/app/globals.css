@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Light theme only (PRD §6.2). `.dark` is never set; this keeps shadcn's dark: classes off even when the OS is dark. */
+/* Light theme only. `.dark` is never set, so dark styles stay off even when the OS is dark. */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -11,7 +11,7 @@
   --font-sans: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-heading: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
-  /* revine. brand tokens (PRD §10.1) as Tailwind colors: bg-brand-900, text-brand-700, bg-mint, … */
+  /* revine. brand tokens as Tailwind colors: bg-brand-900, text-brand-700, bg-mint, … */
   --color-brand-900: var(--brand-900);
   --color-brand-700: var(--brand-700);
   --color-mint: var(--mint);
@@ -60,10 +60,10 @@
 }
 
 :root {
-  /* revine. brand (PRD §10.1). Never use --mint for text on a light background (about 2:1). */
+  /* revine. brand colors. Never use --mint for text on a light background (about 2:1). */
   --brand-900: #0b1f1a; /* primary dark green: hero/footer, Paid badge, primary button hover */
   --brand-700: #16634b; /* secondary green: primary buttons, links, focus rings, green text */
-  --mint: #35cb9b; /* accent green, to be confirmed by the designer (§21): logo dot, Listed badge */
+  --mint: #35cb9b; /* accent green for the logo dot and Listed badge */
   --bg: #f8faf6; /* app background */
   --ink: #1f2a26; /* body text and headings */
   --ink-muted: #6b6f6c; /* secondary text */
@@ -236,7 +236,7 @@ li[data-state="done"] [data-step-label] {
 }
 
 /* ---------------------------------------------------------------------------
-   Landing (PRD §9.2). One authored moment, the hero stage; two explanations that run when seen
+   Landing. One authored moment, the hero stage; two explanations that run when seen
    (How it works, Private by design). Everything starts visible without JS except what explains. */
 
 @media (prefers-reduced-motion: no-preference) {

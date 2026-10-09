@@ -23,7 +23,7 @@ import {
   toWibDateString,
 } from "./format.ts";
 
-test("§7 worked example: Rp10.000.000 at 3% for 30 days", () => {
+test("worked example: Rp10.000.000 at 3% for 30 days", () => {
   const amount = 10_000_000n;
   const price = priceFromDiscount(amount, 3);
   assert.equal(price, 9_700_000n);

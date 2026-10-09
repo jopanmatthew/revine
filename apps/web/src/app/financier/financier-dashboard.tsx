@@ -84,7 +84,7 @@ function FinancierInvoices() {
   const flows = useInvoiceFlows({ onBought: () => setTab("portfolio"), onBuyLost: () => setTab("marketplace") });
   const now = nowSeconds();
 
-  // Listed, not past due, not mine (§9.9). A few hundred invoices at most, so no memo needed.
+  // Listed, not past due, not mine. A few hundred invoices at most, so no memo needed.
   const open = invoices
     .filter((inv) => inv.status === "Listed" && now < inv.dueDate && !sameAddress(inv.seller, address))
     .sort(SORTERS[sort]);
@@ -94,7 +94,7 @@ function FinancierInvoices() {
     ...mine.filter((inv) => inv.status === "Paid").sort((a, b) => b.paidAt - a.paidAt),
   ];
 
-  // Portfolio figures (§9.9): the cover carries them on both tabs.
+  // Portfolio figures: the cover carries them on both tabs.
   const invested = held.reduce((sum, inv) => sum + inv.askPrice, 0n);
   const awaitingRepayment = held.filter((inv) => inv.status === "Financed");
   const expected = awaitingRepayment.reduce((sum, inv) => sum + inv.faceAmount, 0n);
@@ -290,7 +290,7 @@ function SortMenu({ value, onChange }: { value: SortOrder; onChange: (value: Sor
 }
 
 /**
- * One open invoice (§9.9), as a ledger entry: the return leads (it's what financiers sort by), the
+ * One open invoice, as a ledger entry: the return leads (it's what financiers sort by), the
  * money line says what you pay and get and when, and trust facts sit quietly underneath.
  */
 function MarketEntry({

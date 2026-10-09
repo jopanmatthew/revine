@@ -15,9 +15,9 @@ import { HowItWorks } from "./_landing/how-it-works";
 import { PrivacyDemo } from "./_landing/privacy-demo";
 import { ROLE_CHIP, type RoleName } from "./_landing/roles";
 
-// Landing (PRD §9.2), Pluang-inspired: a centered hero over the product itself, then the example as
+// Landing: a centered hero over the product itself, then the example as
 // a calculator, the steps as tabs, the roles as three views of one invoice. The mark's slanted
-// planes stay in the hero only (§10.1).
+// planes stay in the hero only.
 
 export default function LandingPage() {
   return (

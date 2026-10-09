@@ -1,4 +1,4 @@
-/** Demo wallets supplied for the Sepolia walkthrough (PRD §18.4). */
+/** Demo wallets used in the Sepolia walkthrough. */
 export const DEMO_WALLETS = {
   seller: { name: "Beras Bu Sari", address: "0xF779D59bEf219cAeB6C8e3F4bfCdf3aB7DE52Be3" },
   buyer: { name: "RM Selera Kita", address: "0x28a3A19dC9Bbea5895185e21796EC1732cAf557F" },

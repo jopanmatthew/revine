@@ -17,7 +17,7 @@ const ROLES = [
   { href: "/financier", label: "Financier", icon: HandCoinsIcon },
 ] as const;
 
-/** Pill segmented control on the dark header: Seller · Buyer · Financier, each to its dashboard (§9.1). */
+/** Pill segmented control on the dark header: Seller · Buyer · Financier, each to its dashboard. */
 function RoleLinks({ activeHref, className }: { activeHref?: string; className?: string }) {
   return (
     <nav aria-label="Role" className={cn("inline-flex rounded-full bg-white/[0.07] p-1 ring-1 ring-white/10", className)}>
@@ -97,7 +97,7 @@ function RoleSwitcher({ className }: { className?: string }) {
   );
 }
 
-/** brand-900, so it runs straight into the landing hero and every screen's cover band (§9.1). */
+/** brand-900, so it runs straight into the landing hero and every screen's cover band. */
 export function SiteHeader() {
   return (
     <header data-motion="header" className="sticky top-0 z-40 bg-brand-900 text-white">

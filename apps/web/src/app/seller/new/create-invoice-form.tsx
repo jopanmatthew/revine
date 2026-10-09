@@ -135,7 +135,7 @@ function CreateInvoiceForm() {
   const dueSeconds = /^\d{4}-\d{2}-\d{2}$/.test(watched.dueDate ?? "") ? toDueDateSeconds(watched.dueDate!) : null;
   const totalError = (errors as { total?: { message?: string } }).total?.message;
 
-  // Leaving mid-transaction would strand the steps (§9.5): ask the browser to warn.
+  // Leaving mid-transaction would strand the steps: ask the browser to warn.
   const running = flow.status === "running";
   useEffect(() => {
     if (!running) return;
@@ -474,7 +474,7 @@ function FieldError({ children, className }: { children: ReactNode; className?: 
   );
 }
 
-/** §9.5 side panel. */
+/** Explain which invoice details are public and which stay off-chain. */
 function PublicVsPrivate() {
   return (
     <div className={panelClass}>
@@ -497,7 +497,7 @@ function PublicVsPrivate() {
   );
 }
 
-/** Success screen (§9.5): what happened, what's next, and the share link for the buyer. */
+/** Success screen: what happened, what's next, and the share link for the buyer. */
 function Created({ id, buyer, onAnother }: { id: bigint; buyer: string; onAnother: () => void }) {
   const displayName = useDisplayNameLookup();
   const [copied, setCopied] = useState(false);

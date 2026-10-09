@@ -23,7 +23,7 @@ const FAUCET_STEPS = txSteps(["wallet", "pending", "success"], {
   success: `${formatNumber(FAUCET_AMOUNT)} test mIDR added ✓`,
 });
 
-/** "Rp100.000.000 mIDR" with the faucet and a Sepolia ETH link; amber dot when gas is low (§9.1). */
+/** "Rp100.000.000 mIDR" with the faucet and a Sepolia ETH link; amber dot when gas is low. */
 export function BalancePill() {
   const { address, isConnected } = useWallet();
   const { midr, eth, isLoading } = useBalances(address);

@@ -20,7 +20,7 @@ import type { Invoice } from "@/lib/types";
 
 const DEFAULT_DISCOUNT = 3;
 
-/** Get financed (§9.6): pick a discount, see exactly what you get today, list it. */
+/** Get financed: pick a discount, see exactly what you get today, list it. */
 export function GetFinancedSheet({
   invoice,
   open,

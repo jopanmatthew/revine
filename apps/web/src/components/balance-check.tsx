@@ -20,7 +20,7 @@ export function useCanAfford(amount: bigint) {
   return { midr, isLoading, enough: !isLoading && midr >= amount };
 }
 
-/** "You need Rp10.000.000 mIDR but have Rp2.000.000." with the faucet right there (§9.8, §11). */
+/** "You need Rp10.000.000 mIDR but have Rp2.000.000," with the faucet right there. */
 export function BalanceShortfall({ need, have }: { need: bigint; have: bigint }) {
   const { faucet } = useRevineActions();
   const flow = useTxFlow();

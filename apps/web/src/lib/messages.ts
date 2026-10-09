@@ -1,4 +1,4 @@
-// Friendly messages from PRD §11. Use these strings exactly; don't reword them in components.
+// Shared friendly messages. Keep user-facing wording in this module, not scattered in components.
 import { formatRupiah } from "@/lib/format";
 
 export const MESSAGES = {
@@ -77,7 +77,7 @@ export type ContractErrorName =
   | "TransfersDisabled"
   | "AttestationExpired";
 
-/** Contract custom errors → friendly messages (§11). Anything unknown → MESSAGES.generic. */
+/** Contract custom errors → friendly messages. Anything unknown → MESSAGES.generic. */
 export const CONTRACT_ERROR_MESSAGES: Record<ContractErrorName, string> = {
   NotBuyer: "Only the buyer on this invoice can do this.",
   NotHolder: "Only the current holder of this invoice can do this.",
@@ -94,7 +94,7 @@ export const CONTRACT_ERROR_MESSAGES: Record<ContractErrorName, string> = {
   AttestationExpired: "This attestation is older than 30 days. Connect the demo bank again.",
 };
 
-/** Wallet cancellations are neutral (gray), not red (§11). */
+/** Wallet cancellations are neutral (gray), not red. */
 export function isNeutralError(message: string): boolean {
   return message === MESSAGES.userRejected || message === MESSAGES.verificationDeclined;
 }

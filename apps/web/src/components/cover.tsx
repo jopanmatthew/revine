@@ -37,7 +37,7 @@ export interface CoverFigure {
 }
 
 /**
- * Every screen opens like the landing hero (§9.1): a brand-900 band straight under the dark header,
+ * Every screen opens like the landing hero: a brand-900 band straight under the dark header,
  * the one number that matters set large, the screen's one action as a mint pill, and its tabs as
  * pills. With `overlap`, the band leaves room for the page's first white sheet to rise over its edge.
  * Titles mix weights like the landing H1: wrap the key words in <strong>.

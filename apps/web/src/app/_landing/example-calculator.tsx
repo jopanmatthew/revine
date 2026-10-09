@@ -20,8 +20,8 @@ const TERMS = ["14", "30", "60", "90"] as const;
 type Term = (typeof TERMS)[number];
 
 /**
- * §9.2's example card as a working calculator. The sentence is the PRD's example at the defaults
- * and rewrites itself as the numbers change; the math is the app's own (§7, §9.6).
+ * The example card works as a calculator. Its sentence updates as the numbers change, using the
+ * same return calculation as the app.
  */
 export function ExampleCalculator() {
   const [juta, setJuta] = useState(10);

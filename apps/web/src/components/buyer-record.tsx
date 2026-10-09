@@ -19,7 +19,7 @@ const TIER_STYLE: Record<BuyerTier, { light: string; dark: string; icon: typeof 
   new: { light: "border-foreground/15 text-ink-muted", dark: "border-white/20 text-white/75", icon: SparklesIcon },
 };
 
-/** The buyer's payment record (PRD §7), from the invoices the hooks already load. */
+/** The buyer's payment record, calculated from the invoices the hooks already load. */
 export function useBuyerRecord(buyer: Address) {
   const { invoices, isLoading } = useInvoices();
   const record = useMemo(() => buyerRecord(invoices, buyer, nowSeconds()), [invoices, buyer]);
@@ -59,7 +59,7 @@ export function BuyerRecordChip({
   );
 }
 
-/** The full record for the Buy sheet: what the chain shows, plus the cold-start guidance (§9.9). */
+/** The full record for the Buy sheet: what the chain shows, plus the cold-start guidance. */
 export function BuyerRecordPanel({ buyer, seller }: { buyer: Address; seller: Address }) {
   const { record, invoices, isLoading } = useBuyerRecord(buyer);
   const displayName = useDisplayNameLookup();

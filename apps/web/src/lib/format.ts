@@ -1,4 +1,4 @@
-// Money, percent, date and return math (PRD §7, §10.2).
+// Money, percent, date and return math.
 // Numbers use Indonesian formatting: Rp10.000.000, 3,09%. Dates look like "7 Nov 2026".
 // Chain times are unix seconds, and due dates are 23:59:59 WIB (UTC+7).
 // No imports, so `node --test` can run format.test.ts directly.
@@ -29,7 +29,7 @@ export function formatRupiah(value: bigint | number, { sign = false }: { sign?: 
   return `${prefix}Rp${integerFormat.format(abs)}`;
 }
 
-/** 50000000 → "Rp50 jt" (credit badge tiers, §7). */
+/** 50000000 → "Rp50 jt" for credit badge tiers. */
 export function formatJuta(value: bigint | number): string {
   const juta = Number(value) / 1_000_000;
   return `Rp${new Intl.NumberFormat("id-ID", { maximumFractionDigits: 1 }).format(juta)} jt`;
@@ -50,7 +50,7 @@ export function formatPercent(value: number, maximumFractionDigits = 2): string 
 }
 
 // ---------------------------------------------------------------------------
-// Return math (§7). Discounts are percents (1–10 in 0,5 steps).
+// Return math. Discounts are percents (1–10 in 0,5 steps).
 
 /** Price = amount × (1 − discount), rounded down to whole rupiah. 10.000.000 at 3 → 9.700.000. */
 export function priceFromDiscount(faceAmount: bigint, discountPercent: number): bigint {
@@ -142,7 +142,7 @@ export function formatDue(dueDate: number, now = nowSeconds()): string {
   return `in ${days} ${days === 1 ? "day" : "days"}`;
 }
 
-/** "just now", "5 min ago", "2 h ago", "3 days ago" (e.g. "sent 2 h ago", §9.8). */
+/** Relative time labels such as "just now", "5 min ago", or "sent 2 h ago". */
 export function formatTimeAgo(unixSeconds: number, now = nowSeconds()): string {
   const seconds = Math.max(0, now - unixSeconds);
   if (seconds < 60) return "just now";
@@ -155,7 +155,7 @@ export function formatTimeAgo(unixSeconds: number, now = nowSeconds()): string {
 // ---------------------------------------------------------------------------
 // Addresses
 
-/** "0x12…ab" (§9.1). */
+/** "0x12…ab". */
 export function shortAddress(address: string): string {
   return `${address.slice(0, 4)}…${address.slice(-2)}`;
 }

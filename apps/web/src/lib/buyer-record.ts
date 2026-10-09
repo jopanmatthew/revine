@@ -1,4 +1,4 @@
-// Buyer payment record (PRD §7): computed from on-chain invoice data, never stored. The chain holds
+// Buyer payment record: computed from on-chain invoice data, never stored. The chain holds
 // every invoice's due date and paid time, so the record can't be edited by anyone.
 // No imports beyond types, so `node --test` can run buyer-record.test.ts directly.
 import type { Invoice } from "./types";

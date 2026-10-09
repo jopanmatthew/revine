@@ -19,7 +19,7 @@ import { useAccount, usePublicClient, useSignMessage, useWriteContract } from "w
 
 /**
  * Every action reports its progress through onStep, and TxStepper renders it.
- * On failure the action calls onStep('error', { error: <§11 message> }) and rejects.
+ * On failure the action calls onStep('error', { error: <friendly message> }) and rejects.
  */
 export interface RevineActions {
   createInvoice(input: CreateInvoiceInput, onStep: OnStep): Promise<bigint>; // returns the new invoice id

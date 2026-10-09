@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 650" role="img" aria-labelledby="title desc">
+  <title id="title">Revine logo and color palette</title>
+  <desc id="desc">Light and dark versions of the Revine wordmark above the brand's dark green, green, mint, and light background colors.</desc>
+  <defs>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16634b"/>
+      <stop offset="1" stop-color="#35cb9b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="650" rx="28" fill="#f8faf6"/>
+  <path d="M700 0h672q28 0 28 28v360H700Z" fill="#0b1f1a"/>
+  <text x="52" y="64" fill="#6b6f6c" font-family="Arial, Helvetica, sans-serif" font-size="20" letter-spacing="4">PRIMARY LOGO · LIGHT</text>
+  <text x="748" y="64" fill="#f8faf6" font-family="Arial, Helvetica, sans-serif" font-size="20" letter-spacing="4">PRIMARY LOGO · DARK</text>
+  <g fill="url(#mark)" transform="translate(78 100) scale(.65)">
+    <path d="M72 230 151 143q11-12 28-12h136l-74 80q-11 12-28 14L72 230Z"/>
+    <path d="m52 340 88-95h108l-69 76q-13 15-32 16L52 340Z"/>
+    <path d="M190 246h94l68 78q10 16-10 16h-84l-69-78q-10-12 1-16Z"/>
+  </g>
+  <text x="330" y="310" fill="#0b1f1a" font-family="Arial, Helvetica, sans-serif" font-size="96" font-weight="700" letter-spacing="-5">revine</text>
+  <circle cx="644" cy="300" r="11" fill="#35cb9b"/>
+  <g fill="url(#mark)" transform="translate(778 100) scale(.65)">
+    <path d="M72 230 151 143q11-12 28-12h136l-74 80q-11 12-28 14L72 230Z"/>
+    <path d="m52 340 88-95h108l-69 76q-13 15-32 16L52 340Z"/>
+    <path d="M190 246h94l68 78q10 16-10 16h-84l-69-78q-10-12 1-16Z"/>
+  </g>
+  <text x="1030" y="310" fill="#f8faf6" font-family="Arial, Helvetica, sans-serif" font-size="96" font-weight="700" letter-spacing="-5">revine</text>
+  <circle cx="1344" cy="300" r="11" fill="#35cb9b"/>
+  <path d="M0 388h1400v1H0z" fill="#e4e8e2"/>
+  <text x="52" y="445" fill="#6b6f6c" font-family="Arial, Helvetica, sans-serif" font-size="20" letter-spacing="4">COLOR PALETTE</text>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <rect x="52" y="472" width="300" height="106" rx="15" fill="#0b1f1a"/>
+    <text x="76" y="622" fill="#1f2a26" font-size="19">Primary · #0B1F1A</text>
+    <rect x="386" y="472" width="300" height="106" rx="15" fill="#16634b"/>
+    <text x="410" y="622" fill="#1f2a26" font-size="19">Green · #16634B</text>
+    <rect x="720" y="472" width="300" height="106" rx="15" fill="#35cb9b"/>
+    <text x="744" y="622" fill="#1f2a26" font-size="19">Mint · #35CB9B</text>
+    <rect x="1054" y="472" width="294" height="106" rx="15" fill="#f8faf6" stroke="#d7ddd6"/>
+    <text x="1078" y="622" fill="#1f2a26" font-size="19">Background · #F8FAF6</text>
+  </g>
+</svg>

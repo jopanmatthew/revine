@@ -1,11 +1,11 @@
-// Mock data and a tiny in-memory store for NEXT_PUBLIC_USE_MOCKS=true (PRD §16.3).
+// Mock data and a tiny in-memory store for NEXT_PUBLIC_USE_MOCKS=true.
 // Uses exactly the same types as real data, so swapping in the real hooks changes no component.
 //
 // Covers: one invoice in every status, an overdue Financed invoice (#4), an expired listing (#5),
 // a seller with a credit badge (0xb9…e0) and one without (Beras Bu Sari, who earns hers live in the
 // demo), an account with no invoices,
-// the §9.5 demo invoice (#12), an invoice whose private details never uploaded (#3) and one whose
-// details don't match the fingerprint (#8), and a buyer payment record for each tier (§7): RM Selera
+// The demo invoice (#12), an invoice whose private details were never uploaded (#3), and one whose
+// details don't match the fingerprint (#8), and a buyer payment record for each tier: RM Selera
 // Kita is Reliable (#1, #13–#17), the other buyer is Risky (#4 overdue), and #6's buyer is new.
 import { BADGE_VALIDITY_SECONDS } from "@/lib/config";
 import { DEMO_WALLETS, MOCK_BUSINESSES } from "@/lib/demo-names";
@@ -40,7 +40,7 @@ export const MOCK_ACCOUNTS: { key: MockAccountKey; label: string; address: Addre
   { key: "empty", label: "Empty account", address: MOCK_ADDRESSES.empty },
 ];
 
-/** The §9.5 demo invoice, also used by [Fill demo invoice]. */
+/** The demo invoice, also used by [Fill demo invoice]. */
 export const DEMO_INVOICE = {
   buyer: MOCK_ADDRESSES.buyer,
   items: [
@@ -51,7 +51,7 @@ export const DEMO_INVOICE = {
   description: "Delivered 8 Oct, PO #0815",
 } as const satisfies { buyer: Address; items: InvoiceItem[]; dueInDays: number; description: string };
 
-/** Mock revenue from the demo bank (§7): demo seller 180 jt, anyone else 120 jt. */
+/** Mock revenue from the demo bank: demo seller 180 jt, anyone else 120 jt. */
 export function mockRevenue(address: string): number {
   return address.toLowerCase() === MOCK_ADDRESSES.seller ? 180_000_000 : 120_000_000;
 }
@@ -191,12 +191,12 @@ const SEEDS: Seed[] = [
     description: "Delivered 4 Oct",
   },
   {
-    // The §9.5 demo invoice, confirmed and ready to finance (3% → Rp9.700.000).
+    // The demo invoice, confirmed and ready to finance (3% → Rp9.700.000).
     id: 12, seller: BU_SARI, buyer: DEMO_INVOICE.buyer, status: "Verified", due: DEMO_INVOICE.dueInDays,
     created: 3 * HOUR, responded: 1 * HOUR,
     items: [...DEMO_INVOICE.items], description: DEMO_INVOICE.description,
   },
-  // RM Selera Kita's repayment history (§7 buyer payment record): financed invoices from two sellers,
+  // RM Selera Kita's repayment history (the buyer payment record): financed invoices from two sellers,
   // all paid on time except one small one, 2 days late. Makes the demo buyer "Reliable".
   {
     id: 13, seller: BU_SARI, buyer: RM_SELERA, status: "Paid", due: -60,
@@ -229,7 +229,7 @@ const SEEDS: Seed[] = [
     items: [{ name: BERAS_PREMIUM, qty: 400, unitPrice: 15_000 }], description: "August supply, PO #0758",
   },
 
-  // Konveksi Maju Jaya (§9.9 Companies): two on-time repayments, one rejected, one expired listing,
+  // Konveksi Maju Jaya (the Companies): two on-time repayments, one rejected, one expired listing,
   // and one open listing. It runs an active profile ad.
   {
     id: 18, seller: konveksi, buyer: buyer3, status: "Paid", due: -50,
@@ -321,7 +321,7 @@ function fromSeed(seed: Seed, now: number): { invoice: Invoice; details: Invoice
 }
 
 // ---------------------------------------------------------------------------
-// Worst case (break-ui): realistic extremes at the limits PRD §7 allows, spread across the first rows,
+// Worst case (break-ui): realistic extremes spread across the first rows,
 // plus a long tail so lists are tested at about 200 invoices. Loaded from the mock wallet menu.
 
 const LONG_ITEM = "Beras premium organik pandan wangi Cianjur, karung 25 kg";
@@ -416,12 +416,12 @@ export interface MockState {
   mismatched: string[]; // fingerprints whose details don't match
   badges: Record<string, CreditBadge>; // by lowercase address
   balances: Record<string, MockBalance>; // by lowercase address
-  ads: ProfileAd[]; // off-chain profile ads (§7), mock-only
+  ads: ProfileAd[]; // off-chain profile ads, mock-only
 }
 
 function createInitialState(now: number): MockState {
   const seeded = SEEDS.map((seed) => fromSeed(seed, now));
-  // The other seller has a badge; Bu Sari earns hers live in the demo (§19 at 1:10).
+  // The other seller has a badge; Bu Sari earns hers live during the demo.
   const otherBadge = { threshold: 50_000_000n, attestedAt: now - 12 * DAY, verifiedAt: now - 12 * DAY + 10 * 60 };
 
   return {
@@ -448,7 +448,7 @@ function createInitialState(now: number): MockState {
 
 // Each tab is its own wallet (sessionStorage), so a seller, buyer and financier window can run side
 // by side. The invoice data is shared through localStorage and the `storage` event, so those three
-// windows react to each other live, like the real demo on Sepolia (PRD §1, §19).
+// windows react to each other live, like the demo on Sepolia.
 const ACCOUNT_KEY = "revine.mockAccount";
 const DATA_KEY = "revine.mockData.v3"; // bumped when the seed data changes
 const LOAD_DELAY_MS = 700;

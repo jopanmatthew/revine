@@ -60,7 +60,7 @@ function timeToFinance(days: number | null) {
 }
 
 /**
- * Companies tab (PRD §9.9): one row per seller, laid out like a P2P merchant list. Paid profile ads
+ * Companies tab: one row per seller, laid out like a P2P merchant list. Paid profile ads
  * pin to the top with an Ad label; [See] opens the company's closed-invoice record.
  */
 export function CompanyList() {
@@ -220,7 +220,7 @@ const OUTCOME_STYLE: Record<OutcomeKind, { badge: string; reason: string; Icon: 
   },
 };
 
-/** [See]: every closed invoice with its timestamps and the plain reason for how it ended (§9.9). */
+/** [See]: every closed invoice with its timestamps and the plain reason for how it ended. */
 function CompanyRecordSheet({
   seller,
   open,

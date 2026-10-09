@@ -1,6 +1,5 @@
-// Simulated contract for mock mode (PRD §16.3). Each action walks through its steps with about
-// 1-second delays and enforces the same rules as RevineInvoice (§13.3), so screens can be built
-// against realistic errors. Messages come from §11.
+// Simulated contract for mock mode. Each action walks through its steps with about 1-second delays
+// and enforces the same rules as RevineInvoice, so screens can be built against realistic errors.
 import type { RevineActions } from "@/lib/hooks/use-revine-actions";
 import { sameAddress } from "@/lib/demo-names";
 import { BADGE_VALIDITY_SECONDS, FAUCET_AMOUNT } from "@/lib/config";

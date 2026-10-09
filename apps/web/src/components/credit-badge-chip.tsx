@@ -12,7 +12,7 @@ import type { Address } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 /**
- * A seller's ZK credit badge (PRD §9.7, P1): "✓ Revenue above Rp100 jt". Financiers see the tier,
+ * A seller's ZK credit badge: "✓ Revenue above Rp100 jt". Financiers see the tier,
  * never the revenue. Without a valid badge it shows "No credit badge" (or nothing, with hideIfNone).
  */
 export function CreditBadgeChip({

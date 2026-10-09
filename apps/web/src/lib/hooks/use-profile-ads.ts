@@ -17,7 +17,7 @@ function useMockProfileAds(): ProfileAdsResult {
   return { ads: loaded ? ads : NO_ADS, isLoading: !loaded };
 }
 
-// TODO(Jovan): profile ads are off-chain (paid boosts, §7); fetch them from an API route when they
+// TODO(Jovan): profile ads are off-chain paid boosts; fetch them from an API route when they
 // go live. Until then there are no ads in real mode, so every profile ranks organically.
 function useApiProfileAds(): ProfileAdsResult {
   return { ads: NO_ADS, isLoading: false };

@@ -11,8 +11,8 @@ import { isNeutralError, MESSAGES } from "@/lib/messages";
 import { cn } from "@/lib/utils";
 
 /**
- * The private half of an invoice: line items, description and the fingerprint check (PRD §9.8,
- * §9.10, §14.2). Rendered from useInvoiceDetails() so the review sheet and invoice page match.
+ * The private half of an invoice: line items, description and the fingerprint check. Rendered from
+ * useInvoiceDetails() so the review sheet and invoice page match.
  */
 export function PrivateDetails({ result }: { result: InvoiceDetailsResult }) {
   const { details, matches, isLoading, error, load } = result;
@@ -84,7 +84,7 @@ export function PrivateDetails({ result }: { result: InvoiceDetailsResult }) {
       ) : (
         <p role="alert" className="flex items-start gap-2 rounded-lg bg-danger/10 px-3.5 py-3 text-sm font-medium text-danger">
           <TriangleAlertIcon className="mt-0.5 size-4 shrink-0" aria-hidden />
-          {/* §11 text verbatim; its leading ⚠ is drawn as the icon. */}
+          {/* Keep the warning wording intact; its leading ⚠ is drawn as the icon. */}
           {MESSAGES.fingerprintMismatch.replace(/^⚠\s*/, "")}
         </p>
       )}
@@ -92,7 +92,7 @@ export function PrivateDetails({ result }: { result: InvoiceDetailsResult }) {
   );
 }
 
-/** What everyone except the seller and buyer sees (§9.10). */
+/** What everyone except the seller and buyer sees. */
 export function PrivateDetailsLocked() {
   return (
     <p className="flex items-start gap-2 rounded-lg bg-muted px-3.5 py-3 text-sm text-ink-muted">

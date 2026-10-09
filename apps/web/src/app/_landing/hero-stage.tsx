@@ -30,7 +30,7 @@ const RECORD = {
 } as const;
 
 /**
- * The hero's one authored moment (PRD §9.2): the product, coded from the app's own parts. Once on
+ * The hero's one authored moment: the product, coded from the app's own parts. Once on
  * load, the financier buys invoice #12 in the browser and the seller's phone gets paid. Reduced
  * motion shows the end state.
  */

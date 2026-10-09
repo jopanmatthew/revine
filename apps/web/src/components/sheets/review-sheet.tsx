@@ -21,7 +21,7 @@ import { formatDate, formatRupiah } from "@/lib/format";
 import { useInvoiceDetails } from "@/lib/hooks";
 import type { Invoice } from "@/lib/types";
 
-/** Review sheet (§9.8): the private details, checked against the fingerprint, then confirm or reject. */
+/** Review sheet: the private details, checked against the fingerprint, then confirm or reject. */
 export function ReviewSheet({
   invoice,
   open,

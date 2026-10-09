@@ -1,5 +1,5 @@
-// Address → demo name for the demo cast (PRD §4).
-// Demo wallets supplied for the Sepolia walkthrough (PRD §18.4).
+// Sample address-to-name mapping for the demo participants.
+// Demo wallets used for the Sepolia walkthrough.
 import { shortAddress } from "@/lib/format";
 import type { Address } from "@/lib/types";
 import { USE_MOCKS } from "@/lib/config";
@@ -7,7 +7,7 @@ import { DEMO_WALLETS } from "./demo-wallets";
 
 export { DEMO_WALLETS };
 
-/** Fictional businesses that exist only in mock data, so the Companies list (§9.9) has a field and buyers have names. */
+/** Fictional businesses that exist only in mock data, so the Companies list has a field and buyers have names. */
 export const MOCK_BUSINESSES = {
   rasa: { name: "Toko Rasa Nusantara", address: "0xb9c15b91c205c8240690197791a9cfd24d3e3be0" },
   konveksi: { name: "Konveksi Maju Jaya", address: "0x5c1e8a7d2b904f63c1e0a9d84b7f2c35e6d10a91" },

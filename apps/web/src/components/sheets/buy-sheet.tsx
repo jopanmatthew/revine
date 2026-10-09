@@ -15,7 +15,7 @@ import { formatDate, formatRupiah } from "@/lib/format";
 import { useDisplayNameLookup } from "@/lib/profile-names";
 import type { Invoice } from "@/lib/types";
 
-/** Buy sheet (§9.9): what you pay, what you get and when, who stands behind it, and the risk. */
+/** Buy sheet: what you pay, what you get and when, who stands behind it, and the risk. */
 export function BuySheet({
   invoice,
   open,

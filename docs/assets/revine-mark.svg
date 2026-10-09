@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">Revine app icon</title>
+  <defs>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16634b"/>
+      <stop offset="1" stop-color="#35cb9b"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="54" fill="#0b1f1a"/>
+  <g fill="url(#mark)" transform="translate(43 50) scale(.8)">
+    <path d="M18 77 72 18q8-9 20-9h94l-51 56q-8 9-20 10L18 77Z"/>
+    <path d="m5 154 61-66h75l-48 53q-9 10-22 11L5 154Z"/>
+    <path d="M101 88h65l47 54q7 12-7 12h-58l-48-54q-7-8 1-12Z"/>
+  </g>
+</svg>

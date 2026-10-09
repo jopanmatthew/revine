@@ -5,7 +5,7 @@ import { formatDate, formatJuta } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 /**
- * The credit badge as a credential (§9.7): the tier, its scope and its expiry, never the revenue.
+ * The credit badge as a credential: the tier, its scope and its expiry, never the revenue.
  * The same object financiers see as a chip on marketplace cards.
  */
 export function BadgeCredential({

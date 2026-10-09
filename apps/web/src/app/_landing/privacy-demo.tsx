@@ -11,7 +11,7 @@ const ITEMS = [
 ] as const;
 
 /**
- * Private by design (§9.2), shown rather than told: when the section is seen, the line items are
+ * Private by design, shown rather than told: when the section is seen, the line items are
  * blacked out bar by bar and the fingerprint is written to the on-chain record. Before that (and
  * with reduced motion, after it) the invoice reads plainly.
  */

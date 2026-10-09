@@ -9,7 +9,7 @@ import { shortAddress } from "@/lib/format";
 import { useDisplayNameLookup } from "@/lib/profile-names";
 import { cn } from "@/lib/utils";
 
-/** A demo name when known, otherwise "0x12…ab" with a copy button (PRD §9.1). */
+/** A demo name when known, otherwise a shortened address with a copy button. */
 export function AddressName({ address, className }: { address: string; className?: string }) {
   const name = useDisplayNameLookup()(address);
   const [copied, setCopied] = useState(false);

@@ -11,7 +11,7 @@ import { formatRupiah } from "@/lib/format";
 import { useDisplayNameLookup } from "@/lib/profile-names";
 import type { Invoice } from "@/lib/types";
 
-/** Pay sheet (§9.8): the full amount, to whoever holds the invoice right now. */
+/** Pay sheet: the full amount, to whoever holds the invoice right now. */
 export function PaySheet({
   invoice,
   open,

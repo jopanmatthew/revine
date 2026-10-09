@@ -46,7 +46,7 @@ export function SellerDashboard() {
 }
 
 /**
- * The success moment (§9.1): when one of my invoices goes from Listed to Financed between refetches,
+ * The success moment: when one of my invoices goes from Listed to Financed between refetches,
  * celebrate. Works across windows too, since the financier buys from their own wallet.
  */
 function usePaidToast(mine: Invoice[], loaded: boolean, displayName: (address?: string | null) => string) {
@@ -88,7 +88,7 @@ function SellerInvoices() {
   const waiting = mine.filter((inv) => inv.status === "Created");
   const ready = mine.filter((inv) => inv.status === "Verified");
   const readyTotal = ready.reduce((sum, inv) => sum + inv.faceAmount, 0n);
-  // §9.4: prices of my financed invoices, plus amounts repaid straight to me.
+  // Prices of my financed invoices, plus amounts repaid straight to me.
   const cashReceived = mine.reduce(
     (sum, inv) => (inv.financedAt > 0 ? sum + inv.askPrice : inv.status === "Paid" ? sum + inv.faceAmount : sum),
     0n,

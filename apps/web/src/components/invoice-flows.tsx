@@ -27,7 +27,7 @@ type SheetKind = "review" | "pay" | "buy" | "finance";
 
 /**
  * Every invoice action in one place: the sheet that prepares it, the transaction stepper that runs it,
- * and the copy for each step (PRD §9.6, §9.8, §9.9). Dashboards and the invoice page share it, so the
+ * and the copy for each step. Dashboards and the invoice page share it, so the
  * same action reads the same everywhere.
  */
 export function useInvoiceFlows(

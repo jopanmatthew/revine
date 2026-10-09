@@ -1,7 +1,7 @@
 import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-/** "Rp10.000.000" with tabular figures so Rupiah columns line up (PRD §10.1). */
+/** Format Rupiah with tabular figures so amounts line up in columns. */
 export function RupiahAmount({
   value,
   sign = false,

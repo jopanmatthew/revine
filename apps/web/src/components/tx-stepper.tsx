@@ -10,9 +10,9 @@ import { isNeutralError, MESSAGES } from "@/lib/messages";
 import type { OnStep, TxStep } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-// One shared progress view for every on-chain action (PRD §9.1). Each step shows waiting, in
+// One shared progress view for every on-chain action. Each step shows waiting, in
 // progress, done or failed; an Etherscan link appears once there's a hash; on failure it shows the
-// §11 message and [Try again], and it never closes by itself on an error.
+// a helpful message and [Try again], and it never closes by itself on an error.
 
 type StepId = Exclude<TxStep, "error">;
 
@@ -39,7 +39,7 @@ export function txSteps(ids: StepId[], labels: Partial<Record<StepId, string>> =
   return ids.map((id) => ({ id, label: labels[id] ?? DEFAULT_LABELS[id] }));
 }
 
-// After this long on one step, show the matching "this can take a while" note (§11).
+// After this long on one step, show the matching "this can take a while" note.
 const SLOW_AFTER_MS: Partial<Record<StepId, number>> = { proving: 10_000, pending: 60_000 };
 const SLOW_NOTES: Partial<Record<StepId, string>> = { proving: MESSAGES.proofSlow, pending: MESSAGES.slowTx };
 
@@ -99,7 +99,7 @@ export function useTxFlow(): TxFlow {
     try {
       return { ok: true, value: await action(onStep) };
     } catch (error) {
-      // Actions report their own §11 message; this only catches ones that threw without it.
+      // Actions report their own friendly message; this catches ones that threw without one.
       setState((s) =>
         s.status === "error" ? s : { ...s, status: "error", error: error instanceof Error ? error.message : MESSAGES.generic },
       );

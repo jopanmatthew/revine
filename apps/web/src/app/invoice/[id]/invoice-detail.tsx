@@ -28,7 +28,7 @@ function parseId(raw: string): bigint | null {
   return /^[1-9]\d{0,18}$/.test(raw) ? BigInt(raw) : null;
 }
 
-/** Invoice detail (§9.10). Public: anyone can read the public half without a wallet. */
+/** Invoice detail. Public: anyone can read the public half without a wallet. */
 export function InvoiceDetail({ rawId }: { rawId: string }) {
   const id = parseId(rawId);
   const { invoice, isLoading, error, refetch } = useInvoice(id ?? 0n);
@@ -95,7 +95,7 @@ function InvoiceView({ invoice }: { invoice: Invoice }) {
   const open = invoice.status === "Verified" || invoice.status === "Listed" || invoice.status === "Financed";
   const back = isSeller ? "/seller" : isBuyer ? "/buyer" : isHolder ? "/financier" : "/app";
 
-  // The same one action per role as the dashboards (§9.10).
+  // The same one action per role as the dashboards.
   let action: ReactNode = null;
   if (!address && !isConnecting) {
     action = <WalletButton className={coverActionClass} />;

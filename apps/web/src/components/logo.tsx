@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 
-// Text-only stand-in until the designer exports logo-horizontal-light.svg / -dark.svg to
-// public/brand/ (PRD §10.1). Don't draw the mark here; swap this for the SVGs when they land.
+// Text-only app wordmark. Brand artwork lives in docs/assets for the project README.
 export function Logo({ variant = "light", className }: { variant?: "light" | "dark"; className?: string }) {
   return (
     <span

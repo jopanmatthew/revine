@@ -23,7 +23,7 @@ export function useIsDesktop(): boolean {
 }
 
 /**
- * The one sheet every flow uses: a bottom sheet on phones (thumb reach, PRD §9.1 mobile-first) and a
+ * The one sheet every flow uses: a bottom sheet on phones and a
  * side panel on desktop. The footer holds the primary action and stays pinned while the body scrolls.
  */
 export function ActionSheet({

@@ -1,4 +1,4 @@
-// Company profiles, profile ads and closed-invoice outcomes (PRD §7, §9.9). Pure functions over
+// Company profiles, profile ads and closed-invoice outcomes. Pure functions over
 // on-chain invoice data; only the ads come from off-chain. No imports beyond types, so
 // `node --test` can run company-profiles.test.ts directly.
 import type { Address, Invoice } from "./types";
@@ -129,7 +129,7 @@ function days(n: number) {
   return `${whole} ${whole === 1 ? "day" : "days"}`;
 }
 
-/** The plain status-and-reason line for a closed invoice (§9.9 Companies). */
+/** The plain status-and-reason line for a closed invoice in the Companies view. */
 export function invoiceOutcome(invoice: Invoice, now: number): Outcome {
   if (invoice.status === "Rejected") {
     return {

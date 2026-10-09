@@ -1,4 +1,4 @@
-// Derived invoice facts computed in the frontend, not stored on-chain (PRD §8.3).
+// Derived invoice facts computed in the frontend, not stored on-chain.
 import { nowSeconds } from "@/lib/format";
 import type { Invoice, InvoiceStatus } from "@/lib/types";
 
@@ -16,7 +16,7 @@ export function isListingExpired(invoice: Pick<Invoice, "status" | "dueDate">, n
   return invoice.status === "Listed" && now > invoice.dueDate;
 }
 
-/** What each role sees for a status (§8.3). Financiers fall back to the seller's wording. */
+/** What each role sees for a status. Financiers fall back to the seller's wording. */
 const STATUS_LABELS: Record<Role, Record<InvoiceStatus, string>> = {
   seller: {
     Created: "Waiting for buyer",

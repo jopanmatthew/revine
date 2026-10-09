@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { RupiahAmount } from "@/components/rupiah-amount";
 
 /**
- * The one "you got paid" moment (PRD §1, §9.1): a headless Sonner toast so it can carry the amount
+ * The one "you got paid" moment: a headless Sonner toast so it can carry the amount
  * at full size, in the brand's dark green, while keeping Sonner's stacking and swipe-to-dismiss.
  * The visible text is still exactly "You got paid Rp9.700.000 🎉".
  */

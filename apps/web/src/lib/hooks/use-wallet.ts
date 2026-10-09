@@ -12,7 +12,7 @@ export interface WalletState {
   isConnected: boolean;
   isConnecting: boolean; // true while the wallet reconnects on page load
   chainId?: number;
-  networkName?: string; // for "You're on {network}." (§11)
+  networkName?: string; // for "You're on {network}."
   isWrongNetwork: boolean; // connected, but not on Sepolia (11155111)
   switchToSepolia: () => void;
 }

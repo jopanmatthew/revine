@@ -4,7 +4,7 @@ import { useEffect, useSyncExternalStore } from "react";
 
 import type { Role } from "@/lib/invoice";
 
-// The last role used, so /app can go straight back to it (PRD §9.3). Browser storage only, wrapped in
+// The last role used, so /app can go straight back to it. Browser storage only, wrapped in
 // try/catch because it can be blocked; without it the role picker simply shows every time.
 const ROLE_KEY = "revine.lastRole";
 const ROLES: Role[] = ["seller", "buyer", "financier"];

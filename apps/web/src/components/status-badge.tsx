@@ -4,7 +4,7 @@ import { isListingExpired, isOverdue, statusLabel, type Role } from "@/lib/invoi
 import type { Invoice, InvoiceStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-// Badge styles from PRD §10.1. Status is always text plus color, never color alone.
+// Status is always shown as text and color, never color alone.
 const STATUS_STYLES: Record<InvoiceStatus, string> = {
   Created: "border-ink-muted bg-transparent text-ink-muted",
   Verified: "border-brand-700 bg-transparent text-brand-700",
@@ -54,7 +54,7 @@ export function StatusBadge({
   );
 }
 
-/** Extra tags computed in the frontend (§8.3): "Overdue" and "Listing expired". */
+/** Extra tags computed in the frontend: "Overdue" and "Listing expired". */
 export function StatusTag({ tag, className }: { tag: "overdue" | "listing-expired"; className?: string }) {
   return (
     <Badge data-tag={tag} className={cn(WARNING_STYLE, className)}>

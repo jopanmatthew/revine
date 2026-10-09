@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 
 // Satoshi from Fontshare (free; license in Satoshi-LICENSE.txt), self-hosted so nothing depends on
-// an outside font server (PRD §10.1). 400 body, 500 labels and buttons, 700 headings and big amounts.
+// an outside font server. Use 400 for body text, 500 for labels and buttons, 700 for headings and amounts.
 export const satoshi = localFont({
   src: [
     { path: "./Satoshi-Regular.woff2", weight: "400", style: "normal" },

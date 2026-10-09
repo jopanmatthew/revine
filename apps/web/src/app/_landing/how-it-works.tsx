@@ -51,7 +51,7 @@ const STEPS: { role: RoleName; short: string; title: string; line: string; view:
 const STEP_MS = 6000;
 
 /**
- * §8.1's five steps as pill tabs over a split panel, each step with the piece of the app it happens
+ * The five steps appear as pill tabs over a split panel, each showing the part of the app where it happens
  * in. While the section is in view the tabs advance on their own; choosing a tab hands control to
  * the visitor for good. Reduced motion never advances.
  */

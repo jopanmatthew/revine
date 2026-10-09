@@ -1,65 +1,106 @@
-# revine.
+<p align="center">
+  <img src="docs/assets/revine-brand-board.svg" alt="Revine logo in light and dark themes" width="760" />
+</p>
 
-Invoice financing for Indonesian SMEs. A seller creates an invoice, the buyer
-confirms it, and a financier can fund it before the buyer repays the current
-holder. The web app is built with Next.js; the contract demo runs on Sepolia.
+<h1 align="center">Turn invoices into opportunities.</h1>
 
-## Run locally
+<p align="center">
+  <a href="docs/assets/revine-logo-light.svg">Light logo</a> ·
+  <a href="docs/assets/revine-logo-dark.svg">Dark logo</a> ·
+  <a href="docs/assets/revine-mark.svg">App icon</a>
+</p>
+
+<p align="center">
+  Revine helps Indonesian small businesses get paid sooner by connecting them with people who can finance their confirmed invoices.
+</p>
+
+<p align="center">
+  <a href="https://revine-azure.vercel.app/app"><strong>Open the live demo</strong></a>
+  · <a href="https://x.com/Revine_Eth">Follow Revine on X</a>
+  · <a href="https://github.com/jopanmatthew/revine">View the source</a>
+</p>
+
+> **A testnet prototype:** The public demo runs on Ethereum Sepolia with test mIDR. It does not use real money. The current invoice contract uses a placeholder verifier, so zero-knowledge proof verification is not active in the public deployment.
+
+## The problem
+
+Small businesses often deliver goods or services today but wait weeks to be paid. That gap can make it hard to restock, pay staff, or take the next order. Traditional credit can be slow or out of reach, even when a business has a valid invoice from a reliable buyer.
+
+## How Revine helps
+
+Revine gives the business a way to offer a confirmed invoice to a financier for early payment. The seller chooses the amount they are willing to accept today. If a financier buys it, the seller gets paid sooner, and the financier becomes entitled to the buyer's later repayment.
+
+For example, on a **Rp10,000,000** invoice, a seller might accept **Rp9,700,000 today**. The Rp300,000 difference is the financier's potential return if the buyer repays the full invoice on time. Repayment still depends on the buyer.
+
+## One invoice, five clear steps
+
+1. **Create** an invoice and share it with the buyer.
+2. **Confirm** — the buyer checks and confirms the amount.
+3. **List** — the seller chooses an early-payment price.
+4. **Finance** — a financier pays the seller and receives the invoice token.
+5. **Repay** — the buyer pays the current token holder when the invoice is due.
+
+The on-chain record tracks confirmation, listing, ownership, and repayment. Invoice line items and descriptions are kept off-chain and shared through the app with the seller and buyer. Wallet addresses, invoice and offer amounts, dates, and transaction history are public on the blockchain. Off-chain details are not end-to-end encrypted from the app's service.
+
+## Take a look
+
+<p align="center">
+  <img src="docs/assets/revine-landing.png" alt="Revine landing page showing an invoice financing example" width="100%" />
+</p>
+
+<p align="center"><em>The landing page explains the idea with a live financing example.</em></p>
+
+<p align="center">
+  <img src="docs/assets/revine-app.png" alt="Revine app role picker for sellers, buyers, and financiers" width="100%" />
+</p>
+
+<p align="center"><em>Choose the role that matches what you want to do.</em></p>
+
+## What is live today
+
+- A public web demo at [revine-azure.vercel.app/app](https://revine-azure.vercel.app/app).
+- A Sepolia deployment using test mIDR, not real currency.
+- A smart contract that records invoice status, transfers the invoice token when financed, and sends repayment to its current holder.
+- Invoice and credit proof circuits and generated verifier sources in the repository. The matching real verifiers have **not** been deployed to Sepolia yet.
+- Demo credit evidence is synthetic and is not connected to a bank.
+
+The public `RevineInvoice` contract points to `AlwaysTrueVerifier`, a test placeholder that accepts any proof. The demo therefore does **not** prove invoice validity or verify private facts with zero-knowledge proofs today. These contracts are for review and testing only.
+
+## Try it
+
+Open the [live app](https://revine-azure.vercel.app/app) to explore the interface. For a no-wallet walkthrough, run the local mock version:
 
 ```bash
 cd apps/web
-npm install
+npm ci
+cp -n .env.example .env.local
 npm run dev
 ```
 
-Open <http://localhost:3000>. Mock mode is controlled by `apps/web/.env.local`.
-See [SETUP.md](SETUP.md) for the real Sepolia setup. Never put a MetaMask
-private key in the app or share it in chat.
+Open <http://localhost:3000>. The mock demo works without a wallet or secrets. It uses sample businesses and test data. Use Node.js 20.9 or newer. For the optional Sepolia setup, see [SETUP.md](SETUP.md).
 
-## Current Sepolia contracts
+## Deployed Sepolia contracts
 
-Network: Ethereum Sepolia (`11155111`).
+Network: Ethereum Sepolia (`11155111`). These are test contracts; do not send real funds.
 
 | Contract | Address | Explorer |
-|---|---|---|
-| MockIDR | `0xf00642cb8069acd00707ccdaa1d0bac5af9828bf` | [View](https://sepolia.etherscan.io/address/0xf00642cb8069acd00707ccdaa1d0bac5af9828bf) |
-| AlwaysTrueVerifier | `0xf958ff6652ae2f277074ba86f278c2cc0ef1b756` | [View](https://sepolia.etherscan.io/address/0xf958ff6652ae2f277074ba86f278c2cc0ef1b756) |
-| RevineInvoice | `0x70ac14f38dac3a56d87ec18b604c61cb9471a59d` | [View](https://sepolia.etherscan.io/address/0x70ac14f38dac3a56d87ec18b604c61cb9471a59d) |
+| --- | --- | --- |
+| MockIDR (test token) | `0xf00642cb8069acd00707ccdaa1d0bac5af9828bf` | [Etherscan](https://sepolia.etherscan.io/address/0xf00642cb8069acd00707ccdaa1d0bac5af9828bf) |
+| AlwaysTrueVerifier (placeholder) | `0xf958ff6652ae2f277074ba86f278c2cc0ef1b756` | [Etherscan](https://sepolia.etherscan.io/address/0xf958ff6652ae2f277074ba86f278c2cc0ef1b756) |
+| RevineInvoice | `0x70ac14f38dac3a56d87ec18b604c61cb9471a59d` | [Etherscan](https://sepolia.etherscan.io/address/0x70ac14f38dac3a56d87ec18b604c61cb9471a59d) |
 
-That invoice deployment still points to `AlwaysTrueVerifier`; it is a
-fingerprint-only test deployment and accepts any proof. The app's real proof
-mode remains off until the generated invoice and credit verifiers and a new
-`RevineInvoice` are deployed and configured. Do not use these test contracts
-with real funds.
+## For judges and contributors
 
-## Readiness
+- [Product and contract flow](docs/ARCHITECTURE.md) — what happens at each step and what is on-chain.
+- [Setup guide](SETUP.md) — local demo, optional Sepolia configuration, and current limitations.
+- [Web app](apps/web/) — the Next.js interface and API routes.
+- [Smart contracts](contracts/README.md) — build, tests, deployment overview, and the verifier caveat.
+- [Remix guide](contracts/remix/README.md) — optional wallet-signed deployment instructions for real verifiers.
 
-- Real MetaMask connection and Sepolia contract hooks are implemented.
-- The Supabase migration was applied on 9 Oct 2026. Afterward, the local app
-  logged successful private invoice-detail writes and reads (`/api/details` 200).
-- Invoice and credit Noir circuits, browser proving, generated Solidity
-  verifiers, and local verifier integration are implemented. Credit revenue is
-  synthetic demo data, not bank evidence. The verifiers are not deployed yet.
-- The production build, frontend checks, circuit tests, and Foundry verifier
-  integration tests pass locally. See [SETUP.md](SETUP.md) for the exact state
-  and remaining MetaMask steps.
-- The three-wallet Sepolia flow still needs funded accounts and a manual run.
-- Public demo is live at <https://revine-azure.vercel.app>. It uses Sepolia;
-  proof mode is off, the current invoice contract is fingerprint-only, and the
-  Demo Bank attestation uses synthetic data.
+## Tech
 
-## Local checks
+Next.js, TypeScript, Solidity, Foundry, Ethereum Sepolia, Noir circuits, and test mIDR.
 
-```bash
-cd apps/web
-npm test
-npm run lint
-npx tsc --noEmit
-NEXT_PUBLIC_USE_MOCKS=false npm run build
+---
 
-cd ../../contracts
-forge test
-```
-
-See [PRD.md](PRD.md) for product requirements and [PRD-day2.md](PRD-day2.md)
-for implementation status.
+Built to help good businesses keep moving while they wait to get paid.

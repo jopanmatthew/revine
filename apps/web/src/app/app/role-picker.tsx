@@ -13,7 +13,7 @@ import type { Role } from "@/lib/invoice";
 import { rememberRole, useLastRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
 
-// §9.3's three large cards, each with what that view is for, shown on the landing's invoice #12.
+// Three large cards explain what each view is for, alongside invoice #12 from the landing page.
 const ROLES: {
   role: Role;
   title: string;

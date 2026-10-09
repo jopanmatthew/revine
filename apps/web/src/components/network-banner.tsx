@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useWallet } from "@/lib/hooks";
 import { MESSAGES } from "@/lib/messages";
 
-/** Shown when the wallet is on another network. Actions stay disabled until it switches (§9.1). */
+/** Shown when the wallet is on another network. Actions stay disabled until it switches. */
 export function NetworkBanner() {
   const { isWrongNetwork, networkName, switchToSepolia } = useWallet();
   if (!isWrongNetwork) return null;

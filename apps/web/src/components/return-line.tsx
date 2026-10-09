@@ -1,7 +1,7 @@
 import { annualizedReturn, daysToDue, formatPercent, formatRupiah, nowSeconds, profitOf, returnPercent } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-/** "+Rp300.000 · 3,09%" with "≈37,6% per year, if repaid on time" (PRD §7, §9.9). */
+/** Show the potential Rupiah return and percentage, with an on-time repayment qualification. */
 export function ReturnLine({
   faceAmount,
   price,

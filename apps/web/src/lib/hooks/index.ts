@@ -1,4 +1,4 @@
-// The only way components read chain data or send transactions (PRD §16.2).
+// The only way components read chain data or send transactions.
 // Each hook switches on NEXT_PUBLIC_USE_MOCKS; the real versions live in the same files.
 export { useWallet, type WalletState } from "./use-wallet";
 export { useInvoices, useInvoice, type InvoicesResult, type InvoiceResult } from "./use-invoices";

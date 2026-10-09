@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 190" role="img" aria-labelledby="title desc">
+  <title id="title">revine. logo for light backgrounds</title>
+  <desc id="desc">A green geometric mark followed by the dark green revine wordmark and mint dot.</desc>
+  <defs>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16634b"/>
+      <stop offset="1" stop-color="#35cb9b"/>
+    </linearGradient>
+  </defs>
+  <g fill="url(#mark)">
+    <path d="M18 77 72 18q8-9 20-9h94l-51 56q-8 9-20 10L18 77Z"/>
+    <path d="m5 154 61-66h75l-48 53q-9 10-22 11L5 154Z"/>
+    <path d="M101 88h65l47 54q7 12-7 12h-58l-48-54q-7-8 1-12Z"/>
+  </g>
+  <text x="246" y="142" fill="#0b1f1a" font-family="Arial, Helvetica, sans-serif" font-size="126" font-weight="700" letter-spacing="-7">revine</text>
+  <circle cx="662" cy="126" r="12" fill="#35cb9b"/>
+</svg>
