@@ -19,9 +19,10 @@ import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { Cover } from "@/components/cover";
-import { PageContainer, panelClass, StickyAction } from "@/components/page";
+import { PageContainer, panelClass } from "@/components/page";
 import { RupiahAmount } from "@/components/rupiah-amount";
 import { SegmentedControl } from "@/components/segmented-control";
+import { StickyAction } from "@/components/sticky-action";
 import { txSteps, useTxRunner } from "@/components/tx-stepper";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

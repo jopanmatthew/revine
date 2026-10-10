@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 
-import { StickyAction } from "@/components/page";
+import { StickyAction } from "@/components/sticky-action";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
@@ -90,7 +90,7 @@ export function Cover({
             </div>
             {lede && <p className="max-w-2xl text-base text-pretty text-white/70 sm:text-lg">{lede}</p>}
           </div>
-          {action && <StickyAction>{action}</StickyAction>}
+          {action && <StickyAction portal>{action}</StickyAction>}
         </div>
 
         {hero && (

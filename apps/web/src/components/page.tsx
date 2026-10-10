@@ -61,12 +61,3 @@ export function ErrorNote({ children, onRetry }: { children: ReactNode; onRetry?
     </div>
   );
 }
-
-/** The screen's primary action: a sticky bottom bar on phones, inline from 640px. */
-export function StickyAction({ children }: { children: ReactNode }) {
-  return (
-    <div className="max-sm:fixed max-sm:inset-x-0 max-sm:bottom-0 max-sm:z-30 max-sm:flex max-sm:gap-2 max-sm:border-t max-sm:border-foreground/10 max-sm:bg-background/90 max-sm:px-4 max-sm:pt-3 max-sm:pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] max-sm:backdrop-blur-md max-sm:[&>*]:flex-1">
-      {children}
-    </div>
-  );
-}
