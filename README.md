@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  Revine helps Indonesian small businesses get paid sooner by connecting them with people who can finance their confirmed invoices.
+  Revine helps Indonesian SMEs get paid sooner by connecting them with people who can finance their confirmed invoices.
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@
 
 ## The problem
 
-Small businesses often deliver goods or services today but wait weeks to be paid. That gap can make it hard to restock, pay staff, or take the next order. Traditional credit can be slow or out of reach, even when a business has a valid invoice from a reliable buyer.
+SMEs often deliver goods or services today but wait weeks to be paid. This cash-flow gap can make it hard to restock, pay staff, or take the next order. Traditional credit can be slow or out of reach, even when an SME has a valid invoice from a reliable buyer.
 
 ## How Revine helps
 
