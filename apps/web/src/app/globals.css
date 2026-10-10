@@ -368,7 +368,8 @@ li[data-state="done"] [data-step-label] {
   }
 
   [data-motion="cover"] {
-    animation: revine-enter 300ms var(--ease-out) both;
+    /* Cover actions use position: fixed on phones; a translated cover traps them in its box. */
+    animation: revine-appear 300ms var(--ease-out) both;
   }
 
   [data-motion="page"] {
