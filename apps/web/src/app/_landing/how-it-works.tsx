@@ -79,7 +79,7 @@ export function HowItWorks() {
         }}
         className="gap-8"
       >
-        <TabsList className="mx-auto h-auto w-full flex-wrap justify-center gap-2 bg-transparent p-0">
+        <TabsList className="mx-auto !h-auto w-full flex-wrap justify-center gap-2 bg-transparent p-0">
           {STEPS.map((s, i) => (
             <TabsTrigger
               key={s.short}

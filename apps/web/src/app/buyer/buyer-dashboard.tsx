@@ -60,7 +60,7 @@ function BuyerInvoices() {
   const tabs: { value: BuyerTab; label: string; count?: number }[] = [
     { value: "confirm", label: "To confirm", count: toConfirm.length },
     { value: "pay", label: "To pay", count: toPay.length },
-    { value: "history", label: "History" },
+    { value: "history", label: "History", count: history.length },
   ];
 
   return (

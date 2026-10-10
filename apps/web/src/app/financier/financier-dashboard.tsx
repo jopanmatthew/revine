@@ -26,6 +26,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { WalletGate } from "@/components/wallet-gate";
 import { RoleGuide } from "@/components/role-guide";
 import { sameAddress } from "@/lib/demo-names";
+import { companyProfiles } from "@/lib/company-profiles";
 import {
   annualizedReturn,
   daysToDue,
@@ -93,6 +94,7 @@ function FinancierInvoices() {
     ...mine.filter((inv) => inv.status === "Financed").sort((a, b) => a.dueDate - b.dueDate),
     ...mine.filter((inv) => inv.status === "Paid").sort((a, b) => b.paidAt - a.paidAt),
   ];
+  const companyCount = companyProfiles(invoices, now).length;
 
   // Portfolio figures: the cover carries them on both tabs.
   const invested = held.reduce((sum, inv) => sum + inv.askPrice, 0n);
@@ -140,7 +142,7 @@ function FinancierInvoices() {
             <CoverTabs
               items={[
                 { value: "marketplace", label: "Marketplace", count: isLoading ? undefined : open.length },
-                { value: "companies", label: "Companies" },
+                { value: "companies", label: "Companies", count: isLoading ? undefined : companyCount },
                 { value: "portfolio", label: "Portfolio", count: isLoading ? undefined : held.length },
               ]}
             />
