@@ -104,3 +104,5 @@ Next.js, TypeScript, Solidity, Foundry, Ethereum Sepolia, Noir circuits, and tes
 ---
 
 Built to help good businesses keep moving while they wait to get paid.
+
+_Test commit by TimTam32123 to check push access. Jopanmatthew has been told; it will be removed afterward._
