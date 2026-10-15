@@ -104,3 +104,5 @@ Next.js, TypeScript, Solidity, Foundry, Ethereum Sepolia, Noir circuits, and tes
 ---
 
 Built to help good businesses keep moving while they wait to get paid.
+
+<!-- Test push from TimTam32123 to check repo access. Safe to delete. -->
